@@ -11,8 +11,12 @@ Repositório pessoal de organização de trabalho (não é código). Idioma: por
 | `pdc-1/` | PDC 1 | Tech Lead e Pesquisador |
 | `pdc-2/` | PDC 2 | Tech Lead e Pesquisador |
 | `mestrado/` | Mestrado | Pesquisador |
+| `dgolabs/terminus/` | Terminus (dgolabs) | Operador e mantenedor da IaC pessoal |
+| `dgolabs/trantor/` | Trantor (dgolabs) | Criador e Operador do produto |
+| `dgolabs/noesis/` | Noesis (dgolabs) | Criador e Operador do produto |
+| `my-skills/` | my-skills | Criador e mantenedor de skills pessoais |
 
-PDC 1 e PDC 2 são projetos independentes.
+PDC 1 e PDC 2 são projetos independentes. `dgolabs/` agrupa projetos pessoais da rede dgolabs; Terminus é infraestrutura pessoal, não frente de trabalho externa; decisões arquiteturais ficam nos ADRs do próprio repositório, aqui só organização e operação. Trantor é o produto que absorve desenvolvimento de features e revisão de entregas; a unidade de acompanhamento na bandeja é o **épico** (`level/epic` no repo), não a sub-issue; release/deploy da imagem ficam em `dgolabs/terminus/`. Noesis é o produto de leitura científica → Zettelkasten; também acompanhado por épico, com gate de rigor (E10.2) bloqueando o pós-MVP; release/deploy ficam em `dgolabs/terminus/`.
 
 ## Onde cada coisa vai
 

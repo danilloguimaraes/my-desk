@@ -1,7 +1,7 @@
 # Trantor (dgolabs)
 
 **Meu papel:** Criador e Operador — defino o backlog (épicos), dou os vereditos e uso o produto no dia a dia
-**Status:** Ativo — v0.11.0 implantada em homologação (coxinha); E12–E19 mesclados em `develop`; 2 épicos abertos (E19 parcialmente, E20) + débito contínuo #144
+**Status:** Ativo — v0.11.0 implantada em homologação (coxinha); E12–E18 mesclados em `develop`, E19 parcial; 2 épicos abertos (E19 parcial, E20) + débito contínuo #144
 
 ## Contexto
 
@@ -36,7 +36,7 @@ E12–E18 concluídos (12–26/09/2026). Épicos E1–E10 e E15 concluídos (14 
 ### Referências no repositório
 
 - `CONTEXT.md` — vocabulário (Worker, dossiê, veredito, Kind, Activity)
-- `docs/adr/` — ADR-0001 a 0023 (0001 Local-Only Autonomy; 0006 Refuse Broken Baseline; 0020 Progress-Bounded Repair; 0022 Pós-publicação; 0023 Autonomia graduada)
+- `docs/adr/` — ADR-0001 a 0027 (0001 Local-Only Autonomy; 0006 Refuse Broken Baseline; 0020 Progress-Bounded Repair; 0022 Pós-publicação; 0023 Autonomia graduada; 0026 Executor de verificação; 0027 Portão local idêntico ao remoto)
 - `docs/auditorias/2026-09-21-plano-auditoria-ux-spa.md` — origem de E18
 - `docs/design/ux-proposal.md` — proposta de UX da SPA
 
@@ -56,6 +56,7 @@ Operação em homologação (compose, release, deploy) fica na bandeja [dgolabs/
 
 | Data | Registro |
 |---|---|
+| 26/09/2026 | Avaliação de prontidão do repositório para agentes (nota 70/100); PRs #167 (lint obrigatório, Node 20 pin, decomposição da `ExecutionPage`) e #168 (ADR-0027 · portão local idêntico ao remoto) mesclados a `develop`. Simulação de uso por 12 personas (Elicitron) rodada em modo validação; achados descartados como acionáveis |
 | 26/09/2026 | PR #166 (retomada de épico retido, recusa em falha de qualificação, cauda de baseline, snapshot de auto-merge) mesclado a `develop`; CI do e2e caiu por pressão no karol2 e passou no re-run |
 | 26/09/2026 | E14, E16, E17, E18 mesclados a `develop` (PRs #155, #156, #158, #165); #130 solicitado duas vezes (duas execuções coexistiram) e ficou retido por baseline vermelha intermitente |
 | 25/09/2026 | Bandeja atualizada: #84 (E12) confirmada como entregue via PR #134; todas as issues de E12 e E13 fechadas |

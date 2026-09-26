@@ -24,11 +24,20 @@ _(vazio)_
 ### Higiene
 
 - [ ] Corrigir flaky `TestVerifyTopicsIntegration` (#72) — @Danillo (via Trantor) — sem prazo — [#72](https://github.com/dgolabs/trantor/issues/72)
+- [ ] Investigar nil pointer em `TestPostPubCIFailureReopensDecision` (e2e): reprovou uma vez em CI, 20× verde local; provável condição de corrida sob carga — @Danillo — sem prazo — run [35860828310](https://github.com/dgolabs/trantor/actions/runs/35860828310)
 - [ ] Abrir issue para dedup de execuções por alvo (repo, número, kind) na intake — duas execuções do #130 coexistiram retidas em 26/09 — @Danillo — sem prazo
 - [ ] Considerar `upload-artifact` do `trantor-api.log` no job e2e da CI para diagnóstico de falhas em `karol2` — @Danillo — sem prazo — [.github/workflows/ci.yml](https://github.com/dgolabs/trantor/blob/develop/.github/workflows/ci.yml)
+- [ ] Ativar branch protection em `develop` exigindo CI verde (ação humana no GitHub) — @Danillo — sem prazo — origem: avaliação de prontidão 26/09
+- [ ] Corrigir `scripts/assess.py` da skill `repo-llm-readiness` para varrer subdiretórios de manifesto (falsos negativos em repositórios com layout `src/`) — @Danillo — sem prazo — TODO em `dgolabs/my-skills/skill/repo-llm-readiness/TODO.md`
 
 ## Concluídas
 
+- [x] Avaliação de prontidão do repositório para agentes (Repository Readiness) — nota 70/100; PRs #167 e #168 aplicados — concluída em 26/09/2026
+- [x] Remediar barreira de descoberta do `.env.example` e pin de Node 20 (`.nvmrc` + `engines`) — PR #167 — concluída em 26/09/2026
+- [x] Tornar `make lint` obrigatório (falha sem `golangci-lint`; `make lint-install`; bootstrap Ubuntu) — PR #167 — concluída em 26/09/2026
+- [x] Decompor `ExecutionPage.tsx` (511 → 140 linhas) em hook + arquivos por estado, sem mudança de comportamento — PR #167 — concluída em 26/09/2026
+- [x] ADR-0027 · portão local idêntico ao remoto (formaliza a decisão de gate obrigatório) — PR #168 — concluída em 26/09/2026
+- [x] Simulação de uso por 12 personas (método Elicitron) em modo validação — material bruto em `/tmp/opencode/trantor-simulation/`; achados descartados como acionáveis — concluída em 26/09/2026
 - [x] E14 Observabilidade (Live Tail, prévia do PR) — mesclado em 26/09/2026 (PR #155)
 - [x] E16 Verificação em container — mesclado em 26/09/2026 (PR #165)
 - [x] E17 Catálogo declarativo de atividades — mesclado em 26/09/2026 (PR #156)

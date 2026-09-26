@@ -4,19 +4,18 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 
 ## Urgente
 
-- [ ] **#126** F1 Bloco F — decidir sobre os E2Es das Tasks 10 e 13: escrever agora (1–2h de infra) ou registrar como dívida técnica e seguir para Task 17 (ADRs `Accepted`) — @Danillo — próximo passo — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
+- [ ] **#126** F1 encerrada tecnicamente — alinhar com Afonso: revisor dos ADRs `Accepted` (0002/0003/0013/0014/0017 com Emendas F1) e validação das divergências 0005/0016/0018 antes de abrir MR — @Danillo com Afonso — próximo passo — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
 - [ ] **#207** Confirmar com Afonso quais dos 3 bloqueantes (map `publication`→news, `ValidateIf`, race de idempotência) seguem abertos após !401 — @Danillo — esta semana — [comentário de 08/09 na #207](https://gitlab.com/daurora-fakenews/fakenews-bff/-/work_items/207)
 
 ## Em aberto
 
-### #126 — Multi-tenant (F0 encerrada; F1 em execução inline, Blocos A–E concluídos, F em execução)
+### #126 — Multi-tenant (F0 encerrada; F1 técnica encerrada; MR postergada até revisor definido)
 
-- [ ] F1 Task 17: ADRs 0002/0003/0013/0014/0017 → `Accepted` com seção "Emendas F1" (D1–D10, inclui divergências 0005/0016/0018); acompanhamento e README de `rbac/` atualizados — @Danillo — próximo — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
-- [ ] F1 E2Es agrupados (Tasks 10 e 13) — pendência com escopo real: setup de infra E2E (usuário com bcrypt, papel em `roles`, tenants, atribuição em `tenant_role_assignments`, `BACKEND_TAG=develop`); cenários já cobertos por 4774 unit tests e pelo `news-leak.e2e-spec.ts` — @Danillo — sessão dedicada — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
-- [ ] Definir com Afonso o revisor dos ADRs e validar as divergências 0005/0016/0018 (agora via Emendas F1) — @Danillo com Afonso — antes de abrir MR
-- [ ] Abrir MR a partir de `poc/126-multitenant` quando houver revisor — @Danillo — após Task 17
-- [ ] Adequação do fluxo M2M (#207) ao ADR-0013 dentro da F1: token `client_credentials` emitindo `tenantId`, `oauth_clients.tenant_id`, remoção do fallback `clientId`, `ensureM2mEnvironment` e suíte `test/analysis-request-m2m` provisionando tenant interno — @Danillo — durante F1 — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
-- [ ] Propor a Afonso o enriquecimento da issue: mover o plano do anexo para `docs/` via MR, corrigir §5.1 (slug→uuid) e §0.4 (A+C→C+D) conforme ADRs 0016/0018, e abrir sub-issues por fase (F0–F6) e camada (bff, bChain, front) — @Danillo — durante F1 — [nota](reunioes/2026-09-22-analise-workitems.md)
+- [ ] Abrir MR a partir de `poc/126-multitenant` **quando houver revisor definido** — @Danillo — após alinhamento com Afonso
+- [ ] Escrever os 2 E2Es adiados da F1 (Task 10 `select-tenant-flow`, Task 13 `tenant-admin-api` + `tenant-context-guard`) em sessão dedicada; cenários hoje cobertos por unit tests equivalentes e por `news-leak.e2e-spec.ts` — @Danillo — sessão dedicada — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
+- [ ] Ligar `MULTITENANT_ENFORCE=true` **só após F2** (retrofit de `scopedFind` nas 33–37 entidades) — @Danillo — após F2
+- [ ] Adequação do fluxo M2M (#207) ao ADR-0013 dentro da F2: token `client_credentials` emitindo `tenantId`, `oauth_clients.tenant_id NOT NULL`, remoção do fallback `clientId`, `ensureM2mEnvironment` e suíte `test/analysis-request-m2m` provisionando tenant interno — @Danillo — F2 — [plano](/tmp/opencode/wt-126/docs/plans/2026-09-25-f1-multitenant-auth-tenants-rbac.md)
+- [ ] Propor a Afonso o enriquecimento da issue: mover o plano do anexo para `docs/` via MR, corrigir §5.1 (slug→uuid) e §0.4 (A+C→C+D) conforme ADRs 0016/0018, e abrir sub-issues por fase (F0–F6) e camada (bff, bChain, front) — @Danillo — durante alinhamento com Afonso — [nota](reunioes/2026-09-22-analise-workitems.md)
 
 ### #207 — Solicitações de análise M2M (Guaia)
 
@@ -46,6 +45,7 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 
 <!-- mover para cá com data de conclusão -->
 
+- [x] #126 F1 Task 17 concluída e push feito — ADRs 0002/0003/0013/0014/0017 `Accepted (2026-09-25, F1)` com seção "Emendas F1" (D1–D10); README de `rbac/` com tabela dos dois níveis (plataforma/tenant/legado); acompanhamento reescrito (F0 CONCLUÍDA, F1 EM ANDAMENTO, dívida técnica dos E2Es explícita); commit `20b6e4a4` publicado em `origin/poc/126-multitenant` — @Danillo — 25/09/2026
 - [x] #126 F1 Task 15 concluída — `src/modules/rbac/decorator-coverage.spec.ts` percorre 6 controllers com `Reflect.getMetadata` e falha se qualquer rota nova ficar sem `@IsPublic/@PreTenant/@Roles/@GlobalRoles` (`9f4cb533`); allowlist de 9 métodos de perfil/wallet/branding — @Danillo — 25/09/2026
 - [x] #126 F1 Task 14 concluída — regra ESLint `local-rules/no-unscoped-querybuilder` (ADR-0015) detecta `createQueryBuilder`/`.query` em arquivos que importam `NewsEntity`/`RewardsEntity`; allowlist de 22 arquivos legados + spec de sincronia entre JSON e decorators reais (`f04a826b`) — @Danillo — 25/09/2026
 - [x] #126 F1 Task 12 concluída — `TenantsAdminController` com `@GlobalRoles(superAdmin)` na classe (PATCH e invite também aceitam Admin do próprio tenant); `current/branding` lê do JWT; `TenantInvitationsController` com `POST /tenants/invitations/accept` marcado `@PreTenant`; máquina de estados corrigida para permitir reativação a partir de `deleted` limpando `deletedAt` (`e5623058`) — @Danillo — 25/09/2026

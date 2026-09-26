@@ -4,6 +4,16 @@ Registro cronológico, mais recente primeiro. Cada entrada: contexto → decisã
 
 ---
 
+## 25/09/2026 — #126: F1 técnica encerrada; MR postergada até revisor definido
+
+**Contexto:** Task 17 executada e commitada (`20b6e4a4`): ADRs 0002/0003/0013/0014/0017 marcados `Accepted (2026-09-25, F1)` com seção "Emendas F1" (D1–D10 do plano); README do `rbac/` documenta os dois níveis (plataforma via `user_roles`/`globalRoles`/`@GlobalRoles` e tenant via `tenant_role_assignments`/`tenantRoles`/`@Roles`, mais o legado que `@Roles` também aceita até a M3); acompanhamento reescrito. Push `--force-with-lease` para `origin/poc/126-multitenant` publicou `eae8eb6d..20b6e4a4`. Suíte inteira continua verde. F1 técnica está em estado de MR.
+
+**Decisão:** A **MR não será aberta agora**. Fica postergada até dois eventos externos: Afonso define o revisor dos 5 ADRs `Accepted` e valida as três divergências do plano original (0005 wallets opção B, 0016 prefixo por uuid, 0018 portal único). Isso evita reabrir a discussão dos ADRs no meio de uma MR ativa, com risco de rework em 11 commits. Enquanto isso, a branch fica publicada em `origin` como referência auditável e ponto de partida para F2.
+
+**Consequências:** Sem MR ativa, `develop` continua intocado e F1 não gera pressão de merge. A F2 (retrofit de `scopedFind` em 33–37 entidades, backfill de `news.tenant_id`/`rewards.tenant_id`, conversão de `analysis_requests.tenant_id`/`billing_meter_events.tenant_id` para uuid, emissão de `tenantId` no token M2M, remoção do fallback `clientId`) pode começar em uma nova branch a partir de `poc/126-multitenant` ou aguardar o merge. Dívida rastreada em `PENDENCIAS.md`: 2 E2Es adiados (Tasks 10 e 13), acionar `MULTITENANT_ENFORCE=true` só após F2, alinhar M2M ao ADR-0013.
+
+---
+
 ## 25/09/2026 — #126: Blocos D e E da F1 concluídos; F1 técnica em suíte inteira verde, Task 17 e E2Es como pendências finais
 
 **Contexto:** Continuação da execução inline. O Bloco D foi fechado com Task 12 (Admin API `@GlobalRoles(superAdmin)`, `current/branding` do JWT, aceite pré-tenant) e o Bloco E com Task 14 (regra ESLint `local-rules/no-unscoped-querybuilder` do ADR-0015 com allowlist para retrofit na F2) e Task 15 (cobertura de decorators nos 6 controllers via `Reflect.getMetadata`). No Bloco F, a suíte inteira (`npm test`) rodou verde: **4774/4774 unit tests**, `tsc --noEmit` limpo, lint sem hits novos, `news-leak.e2e-spec.ts` continua 3/3. Rebase sobre `origin/develop` é no-op (nada avançou desde a base atual).

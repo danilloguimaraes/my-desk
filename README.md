@@ -13,7 +13,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | [Mestrado](mestrado/) | Pesquisador | _a preencher_ | — |
 | [Terminus](dgolabs/terminus/) | Operador e mantenedor (IaC dgolabs) | Ativo — repo endurecido (5 PRs mergeados 26/09): identidade `${meta.name}`, `make drift`, runbooks, Kafka autodescoberto; requisitos e readiness catalogados | Aplicar o ADR-0010 no Pool seguindo a ordem estrita do PR #39 (`pool.yml` antes do `job run`); depois fechar issue #1 |
 | [Trantor](dgolabs/trantor/) | Criador e Operador (produto dgolabs) | Ativo — v0.11.0 em homologação (coxinha); E12–E18 mesclados, E19 parcial; 2 épicos abertos (E19 parcial, E20) | Reabrir solicitação de #130 (duas execuções coexistiram em 26/09); depois disparar E20 (#159) |
-| [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; sequência pós-MVP definida | Publicar imagem GHCR (#87); resolver bugs críticos #79/#82/#83/#85 |
+| [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; sequência pós-MVP definida; repo com AGENTS.md/CONTRIBUTING (LLM Readiness 59→~73) | Reconciliar status de #44; publicar imagem GHCR (#87); abrir issues dos impasses achados na simulação de uso |
 | [Principles](dgolabs/principles/) | Criador e Operador (produto dgolabs) | Ativo — Épico 0 concluído; Épico 1 (Debt) mergeado, Ledger pendente; self-contained v0 entregue (#23) | Implementar `GET /ledger` e homologar Épico 1 (tag `v1.0.0-epic-1`) |
 | [Prisma](dgolabs/prisma/) | Criador e Operador (produto dgolabs) | Setup concluído — 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21) | Disparar E1 (UX/UI) ∥ E2 (Backend) via agentes |
 | [Preleção](dgolabs/prelecao/) | Criador e Operador (produto dgolabs) | Ativo — backend v0 entregue (fatia Fechar Chamada → Cobrança Avulsa); mensalidade, avaliação e escalação pendentes | Implementar Tesouraria de Mensalistas (Competência) |
@@ -25,6 +25,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 - [ ] **SimCAQ** — Restabelecer contato com Leonardo — imediato
 - [ ] **Denodare** — #126: alinhar com Afonso revisor dos ADRs `Accepted` e validação das divergências 0005/0016/0018 antes de abrir MR — próximo passo
 - [ ] **Denodare** — #207: confirmar com Afonso quais dos 3 bloqueantes seguem abertos após !401 — esta semana
+- [ ] **Noesis** — Reconciliar E10.2 #44: CLOSED no GitHub, desk o trata como gate de E11 — próxima sessão
 - [ ] **PDC 1** — Deploy bloqueado: ADK web ok, mas execução via API falha por incompatibilidade do processador do servidor — imediato
 - [ ] **PDC 1** — Confirmar arquitetura do servidor com Danilo Ramos e viabilizar alternativa compatível — imediato
 - [ ] **PDC 1** — Executar HumanEval com as LLMs definidas e gerar relatórios — após o deploy

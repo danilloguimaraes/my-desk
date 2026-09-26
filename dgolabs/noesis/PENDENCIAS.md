@@ -6,7 +6,7 @@ Regra desta bandeja: a unidade de acompanhamento é o **épico**. Sub-issues só
 
 ## Urgente
 
-_(vazio)_
+- [ ] Reconciliar status de **E10.2 #44**: issue está CLOSED no GitHub, desk a trata como gate bloqueando E11 — decidir se E11 está liberado ou se o gate de rigor virou outra issue — @Danillo — próxima sessão — sessão 26/09/2026
 
 ## Em aberto
 
@@ -38,6 +38,22 @@ Ordem sugerida por valor (ver [épico #47](https://github.com/dgolabs/noesis/iss
 
 - [ ] **E10.2 #44** Homologar hipótese de rigor: validar que o pipeline S1–S4 produz saídas com rigor científico suficiente antes de escalar throughput — @Danillo — sem prazo — [issue #44](https://github.com/dgolabs/noesis/issues/44)
 
+### Achados da simulação de uso (26/09/2026, hipóteses — validar antes de virar escopo)
+
+Relatório completo: `rascunhos/2026-09-26-simulacao-uso-elicitron.md` (a mover de `/tmp/opencode/noesis-simulacao-uso.md`).
+
+- [ ] Abrir issue: escapes de impasse — Descartar em `Inbox`, "seguir sem objeções" com Fato quando `InterrogationFailed` definitivo, exibir `last_error` no Gate 1 — @Danillo — sem prazo — simulação P6/P7 (2 abandonos)
+- [ ] Abrir issue: evidência textual da âncora (trecho do Paginated Text Store ao redor do bbox no cartão do claim) — acessibilidade e conteúdo matemático — @Danillo — sem prazo — simulação P5/P10
+- [ ] Avaliar prompts de S3 por gênero epistêmico (qualitativo/histórico/teórico); Prompt Registry já suporta tipologia — @Danillo — sem prazo — simulação P2/P6/P10
+- [ ] Rascunho Local nas réplicas do Gate 3 e alerta de custódia em qualquer estado parado — @Danillo — sem prazo — simulação P8
+- [ ] Decidir se "leitor não-autor" (fechar reading sem Nota Permanente, com Fato explícito) entra no escopo — exige ADR; tensiona Human Authoring Lock — @Danillo — sem prazo — simulação P4
+
+### LLM Readiness do repositório (Ondas 2–3)
+
+- [ ] Verificar estabilidade de `vars.CI_RUNNER` (9 das 10 falhas de CI foram em 19/09 durante migração para karol2, jobs sem step executado) — @Danillo — sem prazo — avaliação 26/09
+- [ ] Branch protection em `develop`/`main` + CODEOWNERS (backbone / web / infra) — @Danillo — sem prazo — avaliação 26/09
+- [ ] Mover relatório da simulação para `rascunhos/` desta bandeja — @Danillo — próxima sessão
+
 ### Higiene
 
 - [ ] **#88** Rodapé com direitos — compliance básico — @Danillo — sem prazo — [issue #88](https://github.com/dgolabs/noesis/issues/88)
@@ -46,6 +62,7 @@ Ordem sugerida por valor (ver [épico #47](https://github.com/dgolabs/noesis/iss
 
 <!-- mover para cá com data de conclusão -->
 
+- [x] LLM Readiness Onda 1 (AGENTS.md, CONTRIBUTING, PR template, .env.example) — concluída em 26/09/2026 (`496c283` em `develop`)
 - [x] E1–E10 (MVP Guided) — concluídas em 16/09/2026
 - [x] Release 0.8.1 — concluída em 19/09/2026
 - [x] **#84** Domínio: TriageFailed como Fato — concluída em 26/09/2026 (commits `fato TriageFailed`, `fan-out … → TriageRequested/TriageFailed`)

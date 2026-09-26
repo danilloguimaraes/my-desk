@@ -55,6 +55,7 @@ Operação em homologação (compose, release, deploy) fica na bandeja [dgolabs/
 
 | Data | Registro |
 |---|---|
+| 26/09/2026 | Avaliação de LLM Readiness do repo (59/100, INSUFICIENTE, sem bloqueios); Onda 1 executada e pushada em `develop` (`496c283`): AGENTS.md, CONTRIBUTING.md, PR template, `.env.example` com 17 vars. Simulação de uso Elicitron (12 personas, modo validação): 7 descobertas priorizadas, 2 impasses bloqueantes (Inbox ilegível sem descarte; `Interrogating` sem saída quando S3 falha). Divergência detectada: #44 (E10.2) está CLOSED no GitHub mas o desk o trata como gate aberto |
 | 26/09/2026 | #84 fechada (TriageFailed como Fato); sequência de execução definida: #87 → #79 → #83 → #82 → #85 → #86 → E10.2 → E11 |
 | 25/09/2026 | Bandeja criada a partir da análise das issues abertas (17 issues: 1 épico E11, 6 bugs críticos, 7 sub-issues E11, 3 operacionais) |
 | 19/09/2026 | Release noesis 0.8.0 → 0.8.1 (PR #14/#15) — [terminus](../terminus/README.md) |

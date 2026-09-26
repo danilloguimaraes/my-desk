@@ -6,6 +6,16 @@ As decisões **arquiteturais** vivem nos ADRs do repositório ([`docs/adr/`](htt
 
 ---
 
+## 26/09/2026 — Contexto de bordo para agentes antes de novas features
+
+**Contexto:** Avaliação de Repository Readiness deu 59/100 (INSUFICIENTE) sem bloqueios: loop de verificação (`make check`) verde e rápido, 14 ADRs e CONTEXT.md sólidos, mas nenhum AGENTS.md, nenhum CONTRIBUTING, 17 variáveis `NOESIS_*` sem `.env.example`, PRs medianos com 16 arquivos. Hipótese inicial de "testes Kafka flaky" foi refutada pelos dados: as falhas de CI concentram-se na migração para runner self-hosted.
+
+**Decisão:** Executar primeiro a camada de contexto (AGENTS.md, CONTRIBUTING, PR template, `.env.example`) — barata e sem tocar código — antes de governança (branch protection, CODEOWNERS) e antes de qualquer refatoração de hotspot. Descartada a refatoração de `ReaderPane.tsx`: falso positivo da heurística de complexidade (optional chaining contado como ramificação).
+
+**Consequências:** Onda 1 pushada em `develop` (`496c283`). Política de PR ≤ 5 arquivos / ≤ 200 linhas agora dirigida também ao agente (Trantor) via AGENTS.md. Ondas 2–3 registradas como pendências.
+
+---
+
 ## 26/09/2026 — Sequência de execução pós-MVP
 
 **Contexto:** Com #84 fechada, restavam 5 bugs críticos, 1 bloqueio de infraestrutura (#87) e 1 gate de qualidade (E10.2/#44) antes do backlog pós-MVP (E11). A ordem de ataque não era óbvia: alguns itens bloqueiam outros, alguns são independentes, e a POC do karol2 vinha consumindo ciclos sem relação direta com o backlog.

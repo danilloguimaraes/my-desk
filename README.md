@@ -12,7 +12,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | [PDC 2](pdc-2/) | Tech Lead e Pesquisador | Onboarding | Ler os 2 artigos da Frente 2 e explorar repositórios quando liberados |
 | [Mestrado](mestrado/) | Pesquisador | _a preencher_ | — |
 | [Terminus](dgolabs/terminus/) | Operador e mantenedor (IaC dgolabs) | Ativo — refundado: Pool Nomad (ADR-0010); trantor v0.11.0 e noesis 0.8.1 em `jobs/prod/` | Aplicar o ADR-0010 (subir Pool, todo apply é humano); fechar issue #1 (absorvida pela refundação) |
-| [Trantor](dgolabs/trantor/) | Criador e Operador (produto dgolabs) | Ativo — v0.9.0; E12/E13 mesclados; 5 épicos abertos | Refazer #84 (UX pós-publicação); fechar issues de E12/E13; disparar E19 |
+| [Trantor](dgolabs/trantor/) | Criador e Operador (produto dgolabs) | Ativo — v0.11.0 em homologação (coxinha); E12–E19 mesclados; 2 épicos abertos (E19 parcial, E20) | Reabrir solicitação de #130 (duas execuções coexistiram em 26/09); depois disparar E20 (#159) |
 | [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; sequência pós-MVP definida | Publicar imagem GHCR (#87); resolver bugs críticos #79/#82/#83/#85 |
 | [Principles](dgolabs/principles/) | Criador e Operador (produto dgolabs) | Ativo — Épico 0 concluído; Épico 1 (Debt) mergeado, Ledger pendente; self-contained v0 entregue (#23) | Implementar `GET /ledger` e homologar Épico 1 (tag `v1.0.0-epic-1`) |
 | [Prisma](dgolabs/prisma/) | Criador e Operador (produto dgolabs) | Setup concluído — 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21) | Disparar E1 (UX/UI) ∥ E2 (Backend) via agentes |

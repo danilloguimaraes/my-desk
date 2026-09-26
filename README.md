@@ -11,9 +11,9 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | [PDC 1](pdc-1/) | Tech Lead e Pesquisador | Em conclusão | Deploy bloqueado por incompatibilidade do processador do servidor (ADK web ok, API falha) |
 | [PDC 2](pdc-2/) | Tech Lead e Pesquisador | Onboarding | Ler os 2 artigos da Frente 2 e explorar repositórios quando liberados |
 | [Mestrado](mestrado/) | Pesquisador | _a preencher_ | — |
-| [Terminus](dgolabs/terminus/) | Operador e mantenedor (IaC dgolabs) | Ativo — v0.2, homologação rodando | Migrar compose do trantor para api + worker (issue #1); destravar publish do noesis |
+| [Terminus](dgolabs/terminus/) | Operador e mantenedor (IaC dgolabs) | Ativo — refundado: Pool Nomad (ADR-0010); trantor v0.11.0 e noesis 0.8.1 em `jobs/prod/` | Aplicar o ADR-0010 (subir Pool, todo apply é humano); fechar issue #1 (absorvida pela refundação) |
 | [Trantor](dgolabs/trantor/) | Criador e Operador (produto dgolabs) | Ativo — v0.9.0; E12/E13 mesclados; 5 épicos abertos | Refazer #84 (UX pós-publicação); fechar issues de E12/E13; disparar E19 |
-| [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; aguardando gate E10.2 | Resolver bugs críticos #79/#82/#84; publicar imagem GHCR (#87) |
+| [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; sequência pós-MVP definida | Publicar imagem GHCR (#87); resolver bugs críticos #79/#82/#83/#85 |
 | [my-skills](my-skills/) | Criador e mantenedor de skills pessoais | Ativo — skills novas em iteração | Testar `desk-sync` em projeto real e ajustar |
 
 ## Pendências urgentes (todas as frentes)

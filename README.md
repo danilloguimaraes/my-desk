@@ -7,7 +7,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | Projeto | Meu papel | Status | Próxima ação crítica |
 |---|---|---|---|
 | [SimCAQ](simcaq/) | Gestor e Tech Lead | Crítico | Definir as 2 bolsas mantidas — **24/09/2026** |
-| [Denodare](denodare/) | Dev | Ativo — 4 work items; #126 F0 encerrada, F1 em força-tarefa (plano em 6 blocos) | Escolher modo de execução e rodar Bloco A (tornar branch mergeável) até o checkpoint; confirmar bloqueantes restantes da #207 |
+| [Denodare](denodare/) | Dev | Ativo — 4 work items; #126 F1 em execução inline: Blocos A/B/C concluídos, D em andamento (Tasks 11–12 entregues) | Commitar Task 12 e encadear Bloco E (lint + cobertura de decorators) e Bloco F (E2Es agrupados, ADRs `Accepted`); confirmar bloqueantes restantes da #207 |
 | [PDC 1](pdc-1/) | Tech Lead e Pesquisador | Em conclusão | Deploy bloqueado por incompatibilidade do processador do servidor (ADK web ok, API falha) |
 | [PDC 2](pdc-2/) | Tech Lead e Pesquisador | Onboarding | Ler os 2 artigos da Frente 2 e explorar repositórios quando liberados |
 | [Mestrado](mestrado/) | Pesquisador | _a preencher_ | — |
@@ -20,8 +20,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 
 - [ ] **SimCAQ** — Definir quem fica com as 2 bolsas — 24/09/2026
 - [ ] **SimCAQ** — Restabelecer contato com Leonardo — imediato
-- [ ] **Denodare** — #126: F1 Bloco A — tornar `poc/126-multitenant` mergeável e parar no checkpoint — próximo passo
-- [ ] **Denodare** — #126: escolher modo de execução da força-tarefa (subagent-driven ou inline) — antes do Bloco A
+- [ ] **Denodare** — #126: F1 Bloco D — commitar Task 12 (Admin API `@GlobalRoles(superAdmin)`, `current/branding` do JWT, aceite pré-tenant) — próximo passo
 - [ ] **Denodare** — #207: confirmar com Afonso quais dos 3 bloqueantes seguem abertos após !401 — esta semana
 - [ ] **PDC 1** — Deploy bloqueado: ADK web ok, mas execução via API falha por incompatibilidade do processador do servidor — imediato
 - [ ] **PDC 1** — Confirmar arquitetura do servidor com Danilo Ramos e viabilizar alternativa compatível — imediato

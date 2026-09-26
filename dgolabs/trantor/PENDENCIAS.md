@@ -12,7 +12,7 @@ _(vazio)_
 
 ### Release e homologação
 
-- [ ] Cortar release v0.10.0 com E12 + E13 (v0.9.0 só levou docs) e abrir `release/trantor-0.10.0` no Terminus — @Danillo — sem prazo — [terminus/PENDENCIAS](../terminus/PENDENCIAS.md)
+- [ ] Atualizar homologação (coxinha) de v0.11.0 para v0.13.0 no Terminus — cobre também v0.12.0 pendente (E12–E19 parcial + Repository Readiness/ADR-0027) — @Danillo — próxima janela — [terminus/PENDENCIAS](../terminus/PENDENCIAS.md)
 - [ ] Resolver #74 (`TRANTOR_TRUSTED_HOSTS`) para a SPA funcionar atrás do Caddy no Home — @Danillo — sem prazo — [#74](https://github.com/dgolabs/trantor/issues/74)
 
 ### Priorização de épicos (ordem proposta, ver DECISOES)
@@ -32,6 +32,7 @@ _(vazio)_
 
 ## Concluídas
 
+- [x] Cortar v0.13.0 em `develop` (Repository Readiness + ADR-0027) — concluída em 26/09/2026
 - [x] Avaliação de prontidão do repositório para agentes (Repository Readiness) — nota 70/100; PRs #167 e #168 aplicados — concluída em 26/09/2026
 - [x] Remediar barreira de descoberta do `.env.example` e pin de Node 20 (`.nvmrc` + `engines`) — PR #167 — concluída em 26/09/2026
 - [x] Tornar `make lint` obrigatório (falha sem `golangci-lint`; `make lint-install`; bootstrap Ubuntu) — PR #167 — concluída em 26/09/2026

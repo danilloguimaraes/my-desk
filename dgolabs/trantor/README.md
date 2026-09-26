@@ -1,7 +1,7 @@
 # Trantor (dgolabs)
 
 **Meu papel:** Criador e Operador — defino o backlog (épicos), dou os vereditos e uso o produto no dia a dia
-**Status:** Ativo — v0.11.0 implantada em homologação (coxinha); E12–E18 mesclados em `develop`, E19 parcial; 2 épicos abertos (E19 parcial, E20) + débito contínuo #144
+**Status:** Ativo — `develop` em v0.13.0 (26/09/2026); homologação em v0.11.0 (coxinha), com v0.12.0 e v0.13.0 pendentes de deploy no Terminus; E12–E18 mesclados, E19 parcial; 2 épicos abertos (E19 parcial, E20) + débito contínuo #144
 
 ## Contexto
 
@@ -56,6 +56,7 @@ Operação em homologação (compose, release, deploy) fica na bandeja [dgolabs/
 
 | Data | Registro |
 |---|---|
+| 26/09/2026 | Tag `v0.13.0` criada em `develop` (avaliação de prontidão para agentes: ADR-0027 · portão local idêntico ao remoto, lint obrigatório, Node 20 pin, decomposição da `ExecutionPage`). Homologação segue em v0.11.0 até o Terminus atualizar (v0.12.0 também pendente) |
 | 26/09/2026 | Avaliação de prontidão do repositório para agentes (nota 70/100); PRs #167 (lint obrigatório, Node 20 pin, decomposição da `ExecutionPage`) e #168 (ADR-0027 · portão local idêntico ao remoto) mesclados a `develop`. Simulação de uso por 12 personas (Elicitron) rodada em modo validação; achados descartados como acionáveis |
 | 26/09/2026 | PR #166 (retomada de épico retido, recusa em falha de qualificação, cauda de baseline, snapshot de auto-merge) mesclado a `develop`; CI do e2e caiu por pressão no karol2 e passou no re-run |
 | 26/09/2026 | E14, E16, E17, E18 mesclados a `develop` (PRs #155, #156, #158, #165); #130 solicitado duas vezes (duas execuções coexistiram) e ficou retido por baseline vermelha intermitente |

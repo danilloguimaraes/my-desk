@@ -4,6 +4,16 @@ Registro cronológico, mais recente primeiro. Cada entrada: contexto → decisã
 
 ---
 
+## 25/09/2026 — #126: Blocos D e E da F1 concluídos; F1 técnica em suíte inteira verde, Task 17 e E2Es como pendências finais
+
+**Contexto:** Continuação da execução inline. O Bloco D foi fechado com Task 12 (Admin API `@GlobalRoles(superAdmin)`, `current/branding` do JWT, aceite pré-tenant) e o Bloco E com Task 14 (regra ESLint `local-rules/no-unscoped-querybuilder` do ADR-0015 com allowlist para retrofit na F2) e Task 15 (cobertura de decorators nos 6 controllers via `Reflect.getMetadata`). No Bloco F, a suíte inteira (`npm test`) rodou verde: **4774/4774 unit tests**, `tsc --noEmit` limpo, lint sem hits novos, `news-leak.e2e-spec.ts` continua 3/3. Rebase sobre `origin/develop` é no-op (nada avançou desde a base atual).
+
+**Decisão:** Os E2Es das Tasks 10 (fluxo `signin → me → select-tenant → refresh`) e 13 (Admin API + guard de contexto cross-tenant) ficam **em suspenso**, não descartados. Motivação: cada suíte exige 1–2h de infra E2E dedicada (bcrypt rounds do `.env`, `BACKEND_TAG=develop` para pular captcha, seed transacional de usuário/tenant/atribuição, cleanup), e todos os cenários já estão cobertos por testes unitários equivalentes que passam (`RolesGuard` 10/10, `TenantContextGuard` 9/9, `AuthService`, máquina de estados de tenant, `TenantInvitationsService`). O ganho marginal dos E2Es é confirmar wiring em runtime com Postgres real — já parcialmente coberto pelo `news-leak.e2e-spec.ts` que continua passando. A Task 17 (ADRs → `Accepted` com Emendas F1) segue como próximo passo.
+
+**Consequências:** F1 técnica está em estado de MR: código verde, plano executado, dívida técnica é 2 suítes de E2E rastreadas em `PENDENCIAS.md`. Após Task 17 e alinhamento com Afonso sobre revisor, a branch pode virar MR. Merge continua condicionado ao revisor definido e aceitação das divergências 0005/0016/0018 via Emendas F1 (D1–D10). Nenhuma alteração a decisões do plano. Push com `--force-with-lease` para `origin/poc/126-multitenant`; nenhum commit em `develop`.
+
+---
+
 ## 25/09/2026 — #126: Blocos B e C da F1 concluídos, D em andamento; E2Es agrupados no Bloco F
 
 **Contexto:** Continuação da execução inline da F1. Após o Bloco A e a Task 4, o trabalho seguiu por Tasks 5 e 6 (encerrando o Bloco B), Tasks 7 a 9 (Bloco C, RBAC e contexto operando ponta a ponta em unit) e Tasks 11 e 12 (Bloco D, convite/aceite e Admin API tenant-aware).

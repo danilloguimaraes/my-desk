@@ -7,7 +7,7 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | Projeto | Meu papel | Status | Próxima ação crítica |
 |---|---|---|---|
 | [SimCAQ](simcaq/) | Gestor e Tech Lead | Crítico | Definir as 2 bolsas mantidas — **24/09/2026** |
-| [Denodare](denodare/) | Dev | Ativo — 4 work items; #126 F1 em execução inline: Blocos A/B/C concluídos, D em andamento (Tasks 11–12 entregues) | Commitar Task 12 e encadear Bloco E (lint + cobertura de decorators) e Bloco F (E2Es agrupados, ADRs `Accepted`); confirmar bloqueantes restantes da #207 |
+| [Denodare](denodare/) | Dev | Ativo — 4 work items; #126 F1 em execução inline: Blocos A–E concluídos, F em execução (suíte inteira verde) | Decidir sobre E2Es (Tasks 10/13) e commitar Task 17 (ADRs Accepted); abrir MR quando houver revisor definido |
 | [PDC 1](pdc-1/) | Tech Lead e Pesquisador | Em conclusão | Deploy bloqueado por incompatibilidade do processador do servidor (ADK web ok, API falha) |
 | [PDC 2](pdc-2/) | Tech Lead e Pesquisador | Onboarding | Ler os 2 artigos da Frente 2 e explorar repositórios quando liberados |
 | [Mestrado](mestrado/) | Pesquisador | _a preencher_ | — |
@@ -16,13 +16,14 @@ Espaço pessoal de organização das minhas frentes de atuação. Cada frente te
 | [Noesis](dgolabs/noesis/) | Criador e Operador (produto dgolabs) | Ativo — v0.8.1; MVP Guided concluído; sequência pós-MVP definida | Publicar imagem GHCR (#87); resolver bugs críticos #79/#82/#83/#85 |
 | [Principles](dgolabs/principles/) | Criador e Operador (produto dgolabs) | Ativo — Épico 0 concluído; Épico 1 (Debt) mergeado, Ledger pendente; self-contained v0 entregue (#23) | Implementar `GET /ledger` e homologar Épico 1 (tag `v1.0.0-epic-1`) |
 | [Prisma](dgolabs/prisma/) | Criador e Operador (produto dgolabs) | Setup concluído — 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21) | Disparar E1 (UX/UI) ∥ E2 (Backend) via agentes |
+| [Preleção](dgolabs/prelecao/) | Criador e Operador (produto dgolabs) | Ativo — backend v0 entregue (fatia Fechar Chamada → Cobrança Avulsa); mensalidade, avaliação e escalação pendentes | Implementar Tesouraria de Mensalistas (Competência) |
 | [my-skills](my-skills/) | Criador e mantenedor de skills pessoais | Ativo — skills novas em iteração | Testar `desk-sync` em projeto real e ajustar |
 
 ## Pendências urgentes (todas as frentes)
 
 - [ ] **SimCAQ** — Definir quem fica com as 2 bolsas — 24/09/2026
 - [ ] **SimCAQ** — Restabelecer contato com Leonardo — imediato
-- [ ] **Denodare** — #126: F1 Bloco D — commitar Task 12 (Admin API `@GlobalRoles(superAdmin)`, `current/branding` do JWT, aceite pré-tenant) — próximo passo
+- [ ] **Denodare** — #126: F1 Bloco F — decidir sobre E2Es (Tasks 10/13) e commitar Task 17 (ADRs `Accepted` com Emendas F1) — próximo passo
 - [ ] **Denodare** — #207: confirmar com Afonso quais dos 3 bloqueantes seguem abertos após !401 — esta semana
 - [ ] **PDC 1** — Deploy bloqueado: ADK web ok, mas execução via API falha por incompatibilidade do processador do servidor — imediato
 - [ ] **PDC 1** — Confirmar arquitetura do servidor com Danilo Ramos e viabilizar alternativa compatível — imediato

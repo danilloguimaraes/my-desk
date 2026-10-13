@@ -4,22 +4,21 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 
 ## Urgente
 
-<!-- vazio -->
+- [ ] Aplicar o ADR-0010 (status: proposto): subir o Pool (3 Servers + 2 Clients) e rodar os Jobs de Plataforma e Produção — @Danillo — sem prazo — origem: https://github.com/dgolabs/terminus/blob/main/docs/adr/0010-pool-nomad-plataforma-producao-ambientes-efemeros.md — crítica
 
 ## Em aberto
 
 ### Refundação Nomad (pós-PR #36)
 
-- [ ] Aplicar o ADR-0010 (status: proposto): subir o Pool (3 Servers + 2 Clients) e rodar os Jobs de Plataforma e Produção — @Danillo — sem prazo — [ADR-0010](https://github.com/dgolabs/terminus/blob/main/docs/adr/0010-pool-nomad-plataforma-producao-ambientes-efemeros.md)
-- [ ] Fechar issue #1 (migração do trantor para api + worker foi absorvida pela refundação; confirmar e fechar) — @Danillo — esta semana — [issue #1](https://github.com/dgolabs/terminus/issues/1)
-- [ ] Migrar dados de Plataforma (Kafka/Postgres) dos volumes compose para Host Volumes do Nomad — @Danillo — com a aplicação do Pool — ADR-0010 (consequências)
-- [ ] CI de branch nos Produtos para viabilizar Ambientes Efêmeros (`jobs/ephemeral/` está vazio; exige imagem com tag de branch) — @Danillo — sem prazo — ADR-0010
+- [ ] Fechar issue #1 (migração do trantor para api + worker foi absorvida pela refundação; confirmar e fechar) — @Danillo — 2026-10-03 — origem: https://github.com/dgolabs/terminus/issues/1
+- [ ] Migrar dados de Plataforma (Kafka/Postgres) dos volumes compose para Host Volumes do Nomad — @Danillo — 2026-10-03 — origem: README.md
+- [ ] CI de branch nos Produtos para viabilizar Ambientes Efêmeros (`jobs/ephemeral/` está vazio; exige imagem com tag de branch) — @Danillo — 2026-10-03 — origem: README.md
 
 ### Dores de operação (reavaliar à luz da refundação)
 
-- [ ] **Versão rodando por ambiente**: Nomad (`nomad job status`) + Consul podem ser a fonte de verdade; reavaliar a dor após aplicar o Pool — @Danillo — após aplicação do ADR-0010 — [nota](reunioes/2026-09-22-dores-versoes-ambientes.md)
-- [ ] **Catálogo de versões por produto**: tags espalhadas em 5 repos + GHCR; nada cruza publicado × promovido × rodando — @Danillo — sem prazo — [nota](reunioes/2026-09-22-dores-versoes-ambientes.md)
-- [ ] **Implantar versão em ambiente específico**: parcialmente respondido por `jobs/prod/` vs `jobs/ephemeral/`; falta prática de Ambientes Efêmeros — @Danillo — sem prazo — [nota](reunioes/2026-09-22-dores-versoes-ambientes.md)
+- [ ] **Versão rodando por ambiente**: Nomad (`nomad job status`) + Consul podem ser a fonte de verdade; reavaliar a dor após aplicar o Pool — @Danillo — 2026-10-03 — origem: reunioes/2026-09-22-dores-versoes-ambientes.md
+- [ ] **Catálogo de versões por produto**: tags espalhadas em 5 repos + GHCR; nada cruza publicado × promovido × rodando — @Danillo — 2026-10-03 — origem: reunioes/2026-09-22-dores-versoes-ambientes.md
+- [ ] **Implantar versão em ambiente específico**: parcialmente respondido por `jobs/prod/` vs `jobs/ephemeral/`; falta prática de Ambientes Efêmeros — @Danillo — 2026-10-03 — origem: reunioes/2026-09-22-dores-versoes-ambientes.md
 
 ### Releases e produtos fora do Pool
 

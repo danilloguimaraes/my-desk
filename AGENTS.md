@@ -2,6 +2,8 @@
 
 Repositório pessoal de organização de trabalho (não é código). Idioma: português.
 
+O contrato de necessidades do sistema está em [VISAO.md](VISAO.md) (Documento de Visão). Mudanças de estrutura, convenção ou ferramenta devem ser avaliadas contra ele antes de aplicadas.
+
 ## Frentes e papéis
 
 | Pasta | Projeto | Papel do Danillo |

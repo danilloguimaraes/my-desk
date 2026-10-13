@@ -1,5 +1,11 @@
 # SimCAQ
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Gestor e Tech Lead |
+| estado | Crítico — verba de pesquisa não renovada; redução de equipe em curso |
+
 **Meu papel:** Gestor e Tech Lead
 **Status:** Crítico — verba de pesquisa não renovada; redução de equipe em curso
 

@@ -48,4 +48,4 @@ _Manter esta lista como espelho das seções "Urgente" de cada `PENDENCIAS.md`._
 └── leituras/        # notas de papers (apenas frentes de pesquisa)
 ```
 
-Convenções detalhadas em [AGENTS.md](AGENTS.md).
+Convenções detalhadas em [AGENTS.md](AGENTS.md); o que o sistema deve contemplar (e o que não deve) está em [VISAO.md](VISAO.md); os requisitos derivados de cada necessidade estão em [REQUISITOS.md](REQUISITOS.md); o modelo de domínio está em [DOMINIO.md](DOMINIO.md); a arquitetura está em [ARQUITETURA.md](ARQUITETURA.md); a solução concreta (gramáticas e comandos) está em [SOLUCAO.md](SOLUCAO.md).

@@ -1,5 +1,17 @@
 # Principles (dgolabs)
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Em andamento — Épico 1 (Debt) mergeado; Ledger/Read Model pendente |
+
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Em andamento — Épico 1 (Debt) mergeado; Ledger/Read Model pendente |
+
 Sistema pessoal de gestão do Capital Disponível — máquina consultiva de alocação entre Desobstrução de Fluxo (amortização de consignados) e Tese de Investimento (carteira de FIIs rumo a R$ 100k). Vocabulário ubíquo e fonte semântica única em `CONTEXT.md` do repo.
 
 - **Repo:** `/home/danillo/workspace/dgolabs/principles` ([dgolabs/principles](https://github.com/dgolabs/principles))

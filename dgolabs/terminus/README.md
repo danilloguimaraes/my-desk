@@ -1,5 +1,11 @@
 # Terminus (dgolabs)
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Operador e mantenedor do repositório |
+| estado | Ativo — refundado (PR #36, ADR-0010): Pool Nomad com Plataforma, Produção e Ambientes Efêmeros; trantor v0.11.0 e noesis 0.8.1 em `jobs/prod/` |
+
 **Meu papel:** Operador (único humano do Pool dgolabs) e mantenedor do repositório
 **Status:** Ativo — refundado (PR #36, ADR-0010): Pool Nomad com Plataforma, Produção e Ambientes Efêmeros; trantor v0.11.0 e noesis 0.8.1 em `jobs/prod/`
 

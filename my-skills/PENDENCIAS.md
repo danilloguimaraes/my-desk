@@ -2,12 +2,12 @@
 
 ## Urgente
 
-- [ ] Testar `desk-sync` em projeto real (denodare, trantor ou noesis) e ajustar SKILL.md conforme falhas observadas — próxima sessão
+- [ ] Testar `desk-sync` em projeto real — @Danillo — 2026-10-20 — crítica
 
 ## Em aberto
 
-- [ ] Reiniciar sessão do opencode para `desk-sync` ser indexada e disparar via gatilho automático
+- [ ] Reiniciar sessão do opencode para `desk-sync` ser indexada e disparar via gatilho automático — @Danillo
 
 ## Concluídas
 
-- 25/09/2026 — Criada skill `desk-sync` em `skill/desk-sync/SKILL.md`
+- [x] Criada skill `desk-sync` em `skill/desk-sync/SKILL.md` — @Danillo — concluída em 2026-09-25

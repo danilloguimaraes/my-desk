@@ -1,5 +1,11 @@
 # my-skills
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e mantenedor de skills pessoais |
+| estado | Ativo — skills novas em iteração |
+
 Repositório pessoal de skills do opencode. Coleção autoral em `skill/` mais vendor em `vendor/opencode-skills/`.
 
 - **Papel:** Criador e mantenedor de skills pessoais

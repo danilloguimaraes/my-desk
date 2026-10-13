@@ -6,7 +6,7 @@ Regra desta bandeja: a unidade de acompanhamento é o **épico**. Sub-issues só
 
 ## Urgente
 
-- [ ] Reconciliar status de **E10.2 #44**: issue está CLOSED no GitHub, desk a trata como gate bloqueando E11 — decidir se E11 está liberado ou se o gate de rigor virou outra issue — @Danillo — próxima sessão — sessão 26/09/2026
+- [ ] Reconciliar status de **E10.2 #44** — @Danillo — 2026-09-26 — crítica
 
 ## Em aberto
 
@@ -36,8 +36,6 @@ Ordem sugerida por valor (ver [épico #47](https://github.com/dgolabs/noesis/iss
 
 ### Gate de qualidade (pré-requisito para E11)
 
-- [ ] **E10.2 #44** Homologar hipótese de rigor: validar que o pipeline S1–S4 produz saídas com rigor científico suficiente antes de escalar throughput — @Danillo — sem prazo — [issue #44](https://github.com/dgolabs/noesis/issues/44)
-
 ### Achados da simulação de uso (26/09/2026, hipóteses — validar antes de virar escopo)
 
 Relatório completo: `rascunhos/2026-09-26-simulacao-uso-elicitron.md` (a mover de `/tmp/opencode/noesis-simulacao-uso.md`).
@@ -62,7 +60,9 @@ Relatório completo: `rascunhos/2026-09-26-simulacao-uso-elicitron.md` (a mover 
 
 <!-- mover para cá com data de conclusão -->
 
-- [x] LLM Readiness Onda 1 (AGENTS.md, CONTRIBUTING, PR template, .env.example) — concluída em 26/09/2026 (`496c283` em `develop`)
-- [x] E1–E10 (MVP Guided) — concluídas em 16/09/2026
-- [x] Release 0.8.1 — concluída em 19/09/2026
-- [x] **#84** Domínio: TriageFailed como Fato — concluída em 26/09/2026 (commits `fato TriageFailed`, `fan-out … → TriageRequested/TriageFailed`)
+- [x] **E10.2 #44** Homologar hipótese de rigor: validar que o pipeline S1–S4 produz saídas com rigor científico suficiente antes de escalar throughput — @Danillo — concluída em 2026-09-26
+
+- [x] LLM Readiness Onda 1 (AGENTS.md, CONTRIBUTING, PR template, .env.example) — concluída em 2026-09-26
+- [x] E1–E10 (MVP Guided) — concluída em 2026-09-16
+- [x] Release 0.8.1 — concluída em 2026-09-19
+- [x] **#84** Domínio: TriageFailed como Fato — concluída em 2026-09-26

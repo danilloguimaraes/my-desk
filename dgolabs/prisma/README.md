@@ -1,5 +1,17 @@
 # Prisma (dgolabs)
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Setup metodológico concluído; 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21); nenhuma task iniciada |
+
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Setup metodológico concluído; 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21); nenhuma task iniciada |
+
 **Meu papel:** Criador e Operador — defino épicos, homologo gates de qualidade e executo via agentes HITL
 **Status:** Setup metodológico concluído; 7 épicos mapeados (#1–#7), 14 tasks `agent/ready` (#8–#21); nenhuma task iniciada
 

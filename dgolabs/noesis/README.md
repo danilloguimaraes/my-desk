@@ -1,5 +1,11 @@
 # Noesis (dgolabs)
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Ativo — MVP Guided concluído (E1–E10 fechados); v0.8.1 declarado em `develop`; aguardando gate de rigor (E10.2/#44) para iniciar pós-MVP |
+
 **Meu papel:** Criador e Operador — defino o backlog (épicos), homologo a hipótese de rigor e uso o produto na pesquisa
 **Status:** Ativo — MVP Guided concluído (E1–E10 fechados); v0.8.1 declarado em `develop`; aguardando gate de rigor (E10.2/#44) para iniciar pós-MVP
 

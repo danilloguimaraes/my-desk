@@ -1,5 +1,11 @@
 # Trantor (dgolabs)
 
+| campo | valor |
+|---|---|
+| situacao | ativa |
+| papel | Criador e Operador |
+| estado | Ativo — `develop` em v0.13.0 (26/09/2026); homologação em v0.11.0 (coxinha), com v0.12.0 e v0.13.0 pendentes de deploy no Terminus; E12–E18 mesclados, E19 parcial; 2 épicos abertos (E19 parcial, E20) + débito contínuo #144 |
+
 **Meu papel:** Criador e Operador — defino o backlog (épicos), dou os vereditos e uso o produto no dia a dia
 **Status:** Ativo — `develop` em v0.13.0 (26/09/2026); homologação em v0.11.0 (coxinha), com v0.12.0 e v0.13.0 pendentes de deploy no Terminus; E12–E18 mesclados, E19 parcial; 2 épicos abertos (E19 parcial, E20) + débito contínuo #144
 

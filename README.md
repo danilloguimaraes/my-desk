@@ -2,6 +2,16 @@
 
 Espaço pessoal de organização das minhas frentes de atuação. Cada frente tem uma pasta autocontida; este arquivo é o painel consolidado.
 
+## Contexto Rápido
+
+Se você chegou aqui para usar a documentação, siga esta ordem:
+
+1. Leia [VISAO.md](VISAO.md) para entender o que o sistema deve contemplar e o que está fora de escopo.
+2. Leia [REQUISITOS.md](REQUISITOS.md) para ver o que cada necessidade pede em termos verificáveis.
+3. Leia [SOLUCAO.md](SOLUCAO.md) para usar os comandos e a gramática correta.
+4. Use `desk check` sempre que alterar arquivos, antes de commitar.
+5. Use o README de cada frente quando for trabalhar dentro de uma pasta específica.
+
 ## Frentes
 
 | Projeto | Meu papel | Status | Próxima ação crítica |

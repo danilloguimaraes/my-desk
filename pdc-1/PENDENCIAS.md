@@ -4,9 +4,6 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 
 ## Urgente
 
-- [ ] Fechar os PRs de benchmark do `llm-definition-benchmark` — @Danillo — sem prazo — origem: plano_acoes.md — crítica
-- [ ] Entregar a primeira versão da apresentação para feedback do Ernesto — @Danillo — sem prazo — origem: monitoramento.md
-- [ ] Consolidar os artefatos de finalização do marco (apresentação e relatórios) — @Danillo — sem prazo — origem: monitoramento.md
 
 ## Em aberto
 

@@ -149,7 +149,11 @@ def editor_do_sistema(buffer: str) -> str:
         f.write(buffer)
         caminho = f.name
     try:
-        if subprocess.run([*shlex.split(comando), caminho]).returncode != 0:
+        try:
+            resultado = subprocess.run([*shlex.split(comando), caminho])
+        except OSError as e:
+            raise Cancelado(f"não foi possível abrir o editor '{comando}': {e.strerror}") from e
+        if resultado.returncode != 0:
             raise Cancelado("o editor saiu com erro")
         return Path(caminho).read_text(encoding="utf-8")
     finally:
@@ -157,7 +161,7 @@ def editor_do_sistema(buffer: str) -> str:
 
 
 def remover_erros(buffer: str) -> str:
-    return "".join(l for l in buffer.splitlines(keepends=True) if not l.startswith(MARCA_ERRO))
+    return "".join(linha for linha in buffer.splitlines(keepends=True) if not linha.startswith(MARCA_ERRO))
 
 
 def anotar_erros(buffer: str, erros: list[str]) -> str:

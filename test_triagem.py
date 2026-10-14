@@ -1,6 +1,8 @@
 """Testes da triagem em lote. Rodar: python3 -m unittest test_triagem -v"""
+import os
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 import desk
@@ -95,6 +97,13 @@ class AplicarTests(unittest.TestCase):
             self.assertEqual(erros, [])
             self.assertIn("- [-] C — @D — descartada em 2026-10-13 — motivo: obsoleto", novo)
             self.assertEqual(t.resumir(leitura), "1 descartada(s)")
+
+
+class EditorTests(unittest.TestCase):
+    def test_editor_inexistente_vira_cancelado(self):
+        with unittest.mock.patch.dict(os.environ, {"VISUAL": "", "EDITOR": "/nao/existe/editor-xyz"}):
+            with self.assertRaises(t.Cancelado):
+                t.editor_do_sistema("x")
 
 
 class LacoTests(unittest.TestCase):

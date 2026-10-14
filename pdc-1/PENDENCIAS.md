@@ -5,8 +5,6 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 ## Urgente
 
 - [ ] Fechar os PRs de benchmark do `llm-definition-benchmark` — @Danillo — sem prazo — origem: plano_acoes.md — crítica
-- [ ] Entregar a primeira versão da apresentação para feedback do Ernesto — @Danillo — sem prazo — origem: monitoramento.md
-- [ ] Consolidar os artefatos de finalização do marco (apresentação e relatórios) — @Danillo — sem prazo — origem: monitoramento.md
 
 ## Em aberto
 
@@ -16,3 +14,7 @@ Formato: `- [ ] ação — @responsável — prazo — origem`
 - [ ] Construir os slides de finalização no modelo oficial — @Danillo — sem prazo — origem: plano_acoes.md
 - [ ] Melhorar a confiança do coder: logs, exceções, context engineer, navegação e sandbox — @Danillo — sem prazo — origem: plano_acoes.md
 - [ ] Validar os pontos em aberto do histórico de melhorias do coder antes de considerar encerrado o esforço — @Danillo — sem prazo — origem: monitoramento.md
+
+## Concluídas
+- [x] Entregar a primeira versão da apresentação para feedback do Ernesto — @Danillo — sem prazo — origem: monitoramento.md — concluída em 2026-10-14
+- [x] Consolidar os artefatos de finalização do marco (apresentação e relatórios) — @Danillo — sem prazo — origem: monitoramento.md — concluída em 2026-10-14

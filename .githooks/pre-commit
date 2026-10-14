@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Portão AD-6: estado inválido não entra no repositório.
+exec "$(git rev-parse --show-toplevel)/desk" check

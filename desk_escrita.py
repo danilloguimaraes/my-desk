@@ -49,11 +49,16 @@ def juntar(lista: list[str]) -> str:
 
 
 def sem_critica(conteudo: str) -> str:
-    return juntar([c for c in campos(conteudo) if c != "crítica"]) if "crítica" in campos(conteudo) else conteudo
+    partes = campos(conteudo)
+    return juntar([c for c in partes if c != "crítica"]) if "crítica" in partes else conteudo
 
 
 def com_critica(conteudo: str) -> str:
     return conteudo if "crítica" in campos(conteudo) else juntar(campos(conteudo) + ["crítica"])
+
+
+def _erro_motivo(motivo: str) -> str | None:
+    return "motivo não pode conter ' — ' (é o separador de campos)" if desk.SEPARADOR in motivo else None
 
 
 def tem_motivo(conteudo: str) -> bool:
@@ -106,8 +111,9 @@ def validar_texto(frente: desk.Frente, texto: str) -> list[desk.Erro]:
 
 def erros_novos(frente: desk.Frente, antes: str, depois: str) -> list[str]:
     """Mensagens que aparecem em `depois` e não em `antes` (multiconjunto; ignora nº de linha)."""
-    contar = lambda t: Counter(err.mensagem for err in validar_texto(frente, t))
-    return sorted((contar(depois) - contar(antes)).elements())
+    def _contar(t: str) -> Counter:
+        return Counter(err.mensagem for err in validar_texto(frente, t))
+    return sorted((_contar(depois) - _contar(antes)).elements())
 
 
 def selecionar(itens: list[Item], alvo: str | None, escolher: Callable[[list[Item]], Item]) -> Item:
@@ -161,8 +167,6 @@ VERBOS = ("feito", "descartar", "urgente", "normal", "critica")
 def executar(verbo: str, frente: desk.Frente, alvo: str | None, *, motivo: str | None = None,
              sim: bool = False, hoje: date | None = None, entrada: Callable[[str], str] = input,
              saida: Callable[[str], None] = print) -> int:
-    if verbo == "descartar" and motivo and desk.SEPARADOR in motivo:
-        raise ValueError("motivo não pode conter ' — ' (é o separador de campos)")
     hoje = hoje or date.today()
     arquivo = frente.pasta / "PENDENCIAS.md"
     texto = arquivo.read_text(encoding="utf-8")
@@ -179,11 +183,13 @@ def executar(verbo: str, frente: desk.Frente, alvo: str | None, *, motivo: str |
                 if not motivo:
                     saida("  ! o motivo é obrigatório")
                     continue
-            if desk.SEPARADOR in motivo:
-                saida("  ! motivo não pode conter ' — ' (é o separador de campos)")
-                motivo = None
-                continue
-            break
+            erro = _erro_motivo(motivo)
+            if erro is None:
+                break
+            if sim:
+                raise ValueError(erro)
+            saida(f"  ! {erro}")
+            motivo = None
     mudancas = transicao(verbo, it, itens, motivo)
 
     encerra_critica = verbo in ("feito", "descartar") and "crítica" in campos(it.conteudo)

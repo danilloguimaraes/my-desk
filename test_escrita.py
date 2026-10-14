@@ -117,6 +117,10 @@ class VerbosTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "separador"):
             self.rodar("descartar", "paper", sim=True, motivo="a — b")
 
+    def test_motivo_com_separador_no_interativo_pergunta_de_novo(self):
+        self.assertEqual(self.rodar("descartar", "paper", respostas=["a — b", "ok", "s"], motivo="a — b"), 0)
+        self.assertIn("motivo: ok", self.texto())
+
     def test_urgente_move(self):
         self.assertEqual(self.rodar("urgente", "paper", sim=True), 0)
         self.assertIn("— crítica\n- [ ] Ler paper — @D\n## Em aberto", self.texto())

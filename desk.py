@@ -516,6 +516,15 @@ def main(argv: list[str] | None = None) -> int:
     p_frente.add_argument("id")
     sub.add_parser("check", help="verifica as invariantes; exit 1 se houver erro")
     sub.add_parser("add", help="registra uma pendência por perguntas")
+    for verbo, ajuda in (("feito", "conclui uma pendência"), ("descartar", "descarta uma pendência, com motivo"),
+                         ("urgente", "move para Urgente"), ("normal", "move para Em aberto"),
+                         ("critica", "transfere a marca de crítica da frente")):
+        p = sub.add_parser(verbo, help=ajuda)
+        p.add_argument("frente")
+        p.add_argument("alvo", nargs="*", help="nº de `desk frente` ou trecho do texto; vazio = menu")
+        p.add_argument("--sim", action="store_true", help="não pergunta (uso por agentes)")
+        if verbo == "descartar":
+            p.add_argument("--motivo")
     args = parser.parse_args(argv)
     comando = args.comando or "painel"
 
@@ -523,6 +532,15 @@ def main(argv: list[str] | None = None) -> int:
         return assistente(RAIZ)
 
     frentes, erros = carregar(RAIZ)
+    if comando in ("feito", "descartar", "urgente", "normal", "critica"):
+        import desk_escrita
+        try:
+            f = resolver_frente(frentes, args.frente)
+            return desk_escrita.executar(comando, f, " ".join(args.alvo) or None,
+                                         motivo=getattr(args, "motivo", None), sim=args.sim)
+        except ValueError as e:
+            print(f"erro: {e}")
+            return 1
     if comando == "check":
         if not erros:
             print("ok: nenhuma inconsistência")

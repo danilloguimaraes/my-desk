@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date
+from typing import Callable
 
 import desk
 
@@ -107,3 +108,106 @@ def erros_novos(frente: desk.Frente, antes: str, depois: str) -> list[str]:
     """Mensagens que aparecem em `depois` e não em `antes` (multiconjunto; ignora nº de linha)."""
     contar = lambda t: Counter(err.mensagem for err in validar_texto(frente, t))
     return sorted((contar(depois) - contar(antes)).elements())
+
+
+def selecionar(itens: list[Item], alvo: str | None, escolher: Callable[[list[Item]], Item]) -> Item:
+    if not itens:
+        raise ValueError("a frente não tem pendências abertas")
+    if alvo and alvo.isdigit():
+        achado = next((it for it in itens if it.chave == int(alvo)), None)
+        if achado is None:
+            raise ValueError(f"não há pendência aberta nº {alvo} (veja `desk frente`)")
+        return achado
+    candidatos = [it for it in itens if not alvo or alvo.casefold() in it.conteudo.casefold()]
+    if not candidatos:
+        raise ValueError(f"nenhuma pendência aberta contém '{alvo}'")
+    return candidatos[0] if len(candidatos) == 1 else escolher(candidatos)
+
+
+def menu(candidatos: list[Item], entrada: Callable[[str], str], saida: Callable[[str], None]) -> Item:
+    for n, it in enumerate(candidatos, start=1):
+        saida(f"  {n}. [{it.secao}] {it.conteudo}")
+    while True:
+        resposta = entrada("Qual? (nº): ").strip()
+        if resposta.isdigit() and 1 <= int(resposta) <= len(candidatos):
+            return candidatos[int(resposta) - 1]
+        saida(f"  ! responda um número de 1 a {len(candidatos)}")
+
+
+def sem_escolha(candidatos: list[Item]) -> Item:
+    lista = "; ".join(f"{it.chave}: {it.conteudo}" for it in candidatos)
+    raise ValueError(f"{len(candidatos)} pendências casam com o trecho; use o nº. {lista}")
+
+
+def transicao(verbo: str, it: Item, itens: list[Item], motivo: str | None) -> dict[int, Mudanca]:
+    if verbo == "feito":
+        return {it.chave: Mudanca("concluída", it.secao, it.conteudo)}
+    if verbo == "descartar":
+        return {it.chave: Mudanca("descartada", it.secao, juntar(campos(it.conteudo) + [f"motivo: {motivo}"]))}
+    if verbo in ("urgente", "normal"):
+        secao = "Urgente" if verbo == "urgente" else "Em aberto"
+        return {it.chave: Mudanca("aberta", secao, it.conteudo)}
+    if verbo == "critica":
+        mudancas = {o.chave: Mudanca("aberta", o.secao, sem_critica(o.conteudo))
+                    for o in itens if o.chave != it.chave and "crítica" in campos(o.conteudo)}
+        mudancas[it.chave] = Mudanca("aberta", it.secao, com_critica(it.conteudo))
+        return mudancas
+    raise ValueError(f"verbo desconhecido: {verbo}")
+
+
+VERBOS = ("feito", "descartar", "urgente", "normal", "critica")
+
+
+def executar(verbo: str, frente: desk.Frente, alvo: str | None, *, motivo: str | None = None,
+             sim: bool = False, hoje: date | None = None, entrada: Callable[[str], str] = input,
+             saida: Callable[[str], None] = print) -> int:
+    if verbo == "descartar" and motivo and desk.SEPARADOR in motivo:
+        raise ValueError("motivo não pode conter ' — ' (é o separador de campos)")
+    hoje = hoje or date.today()
+    arquivo = frente.pasta / "PENDENCIAS.md"
+    texto = arquivo.read_text(encoding="utf-8")
+    itens = itens_abertos(texto)
+    escolher = sem_escolha if sim else (lambda c: menu(c, entrada, saida))
+    it = selecionar(itens, alvo, escolher)
+
+    if verbo == "descartar":
+        while True:
+            if not (motivo and motivo.strip()):
+                if sim:
+                    raise ValueError("descartar exige --motivo em modo --sim")
+                motivo = entrada("Motivo do descarte: ").strip()
+                if not motivo:
+                    saida("  ! o motivo é obrigatório")
+                    continue
+            if desk.SEPARADOR in motivo:
+                saida("  ! motivo não pode conter ' — ' (é o separador de campos)")
+                motivo = None
+                continue
+            break
+    mudancas = transicao(verbo, it, itens, motivo)
+
+    encerra_critica = verbo in ("feito", "descartar") and "crítica" in campos(it.conteudo)
+    if encerra_critica and frente.situacao == "ativa":
+        outros = [o for o in itens if o.chave != it.chave]
+        if sim or not outros:
+            raise ValueError(f"'{it.conteudo}' é a crítica de {frente.id}; "
+                             f"rode `desk critica {frente.id} <nº>` antes")
+        saida(f"Este item é a crítica de {frente.id}. Qual passa a ser a crítica?")
+        sucessora = menu(outros, entrada, saida)
+        mudancas[sucessora.chave] = Mudanca("aberta", sucessora.secao, com_critica(sucessora.conteudo))
+
+    novo = reescrever(texto, mudancas, [], hoje)
+    problemas = erros_novos(frente, texto, novo)
+    if problemas:  # valida antes de pedir confirmação
+        saida("recusado: a mudança criaria inconsistência(s):")
+        for p in problemas:
+            saida(f"  ! {p}")
+        return 1
+    for chave, m in mudancas.items():
+        saida(f"  - {itens[chave - 1].conteudo}\n  + {linha_de(m, hoje)[6:]}  [{m.situacao}]")
+    if not sim and entrada("Confirmar? [S/n]: ").strip().lower() not in ("", "s", "sim"):
+        saida("nada foi gravado")
+        return 1
+    desk.gravar_atomico(arquivo, novo)
+    saida(f"ok: {frente.id}/PENDENCIAS.md atualizado")
+    return 0

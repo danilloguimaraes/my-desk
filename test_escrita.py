@@ -59,3 +59,77 @@ class ValidacaoTests(unittest.TestCase):
             # duas críticas: erro novo
             depois = antes.replace("- [ ] A — @D", "- [ ] A — @D — crítica") + "- [ ] B — @D — crítica\n"
             self.assertTrue(any("(tem 2)" in m for m in e.erros_novos(frente, antes, depois)))
+
+
+FRENTE = ("## Urgente\n- [ ] Fechar contrato — @D — crítica\n## Em aberto\n- [ ] Ler paper — @D\n"
+          "- [ ] Ler artigo — @D\n## Concluídas\n")
+
+
+class VerbosTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.raiz = Path(self._tmp.name)
+        self.pasta = criar_frente(self.raiz, "f", pendencias=FRENTE)
+        self.saida: list[str] = []
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def rodar(self, verbo, alvo, respostas=(), **kw):
+        frente = desk.carregar(self.raiz)[0][0]
+        it = iter(respostas)
+        return e.executar(verbo, frente, alvo, hoje=HOJE, entrada=lambda _: next(it),
+                          saida=self.saida.append, **kw)
+
+    def texto(self):
+        return (self.pasta / "PENDENCIAS.md").read_text(encoding="utf-8")
+
+    def test_feito_por_numero(self):
+        self.assertEqual(self.rodar("feito", "2", sim=True), 0)
+        self.assertIn("- [x] Ler paper — @D — concluída em 2026-10-13", self.texto())
+
+    def test_feito_por_trecho_com_confirmacao(self):
+        self.assertEqual(self.rodar("feito", "artigo", respostas=["s"]), 0)
+        self.assertIn("- [x] Ler artigo", self.texto())
+
+    def test_recusa_na_confirmacao_nao_grava(self):
+        self.assertEqual(self.rodar("feito", "artigo", respostas=["n"]), 1)
+        self.assertEqual(self.texto(), FRENTE)
+
+    def test_ambiguo_em_sim_falha(self):
+        with self.assertRaisesRegex(ValueError, "2 pendências"):
+            self.rodar("feito", "Ler", sim=True)
+
+    def test_ambiguo_interativo_usa_menu(self):
+        self.assertEqual(self.rodar("feito", "Ler", respostas=["2", "s"]), 0)
+        self.assertIn("- [x] Ler artigo", self.texto())
+
+    def test_descartar_exige_motivo_em_sim(self):
+        with self.assertRaisesRegex(ValueError, "motivo"):
+            self.rodar("descartar", "paper", sim=True)
+
+    def test_descartar_com_motivo(self):
+        self.assertEqual(self.rodar("descartar", "paper", sim=True, motivo="fora do escopo"), 0)
+        self.assertIn("## Descartadas\n- [-] Ler paper — @D — descartada em 2026-10-13 — motivo: fora do escopo",
+                      self.texto())
+
+    def test_motivo_com_separador_recusado(self):
+        with self.assertRaisesRegex(ValueError, "separador"):
+            self.rodar("descartar", "paper", sim=True, motivo="a — b")
+
+    def test_urgente_move(self):
+        self.assertEqual(self.rodar("urgente", "paper", sim=True), 0)
+        self.assertIn("— crítica\n- [ ] Ler paper — @D\n## Em aberto", self.texto())
+
+    def test_critica_transfere(self):
+        self.assertEqual(self.rodar("critica", "artigo", sim=True), 0)
+        self.assertIn("- [ ] Fechar contrato — @D\n", self.texto())
+        self.assertIn("- [ ] Ler artigo — @D — crítica", self.texto())
+
+    def test_encerrar_critica_pede_sucessora(self):
+        self.assertEqual(self.rodar("feito", "contrato", respostas=["1", "s"]), 0)
+        self.assertIn("- [ ] Ler paper — @D — crítica", self.texto())
+
+    def test_encerrar_critica_em_sim_falha(self):
+        with self.assertRaisesRegex(ValueError, "desk critica"):
+            self.rodar("feito", "contrato", sim=True)

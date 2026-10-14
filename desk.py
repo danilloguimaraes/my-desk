@@ -6,6 +6,7 @@ Contrato: SOLUCAO.md. Modelo: DOMINIO.md. Python 3.10+, apenas stdlib.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from dataclasses import dataclass, field
@@ -299,6 +300,18 @@ def verificar_cruzado(frentes: list[Frente]) -> list[Erro]:
     return erros
 
 
+def resolver_frente(frentes: list[Frente], texto: str) -> Frente:
+    exata = next((f for f in frentes if f.id == texto), None)
+    if exata:
+        return exata
+    por_sufixo = [f for f in frentes if f.id.rsplit("/", 1)[-1] == texto]
+    if len(por_sufixo) == 1:
+        return por_sufixo[0]
+    if por_sufixo:
+        raise ValueError(f"frente ambígua '{texto}': {', '.join(f.id for f in por_sufixo)}")
+    raise ValueError(f"frente não encontrada: {texto}")
+
+
 def carregar(raiz: Path = RAIZ) -> tuple[list[Frente], list[Erro]]:
     frentes: list[Frente] = []
     erros: list[Erro] = []
@@ -348,9 +361,10 @@ def renderizar_frente(f: Frente, erros: list[Erro]) -> list[str]:
     linhas = [f"## {f.id}", ""]
     linhas += [f"- {campo}: {f.ficha.get(campo, '—')}" for campo in ("situacao", "papel", "estado")]
     linhas.append(f"- próxima ação crítica: {_proxima(f)}")
-    abertas = [p for p in f.pendencias if p.aberta]
+    abertas = [p for p in f.pendencias if p.aberta and p.secao in SECOES_ABERTAS]
     linhas += ["", f"### Pendências abertas ({len(abertas)})"]
-    linhas += [f"- {'[URGENTE] ' if p.urgente else ''}{p.descricao}{_sufixo(p)}" for p in abertas]
+    linhas += [f"{n}. {'[URGENTE] ' if p.urgente else ''}{p.descricao}{_sufixo(p)}"
+               for n, p in enumerate(abertas, start=1)]
     reunioes = sorted((f.pasta / "reunioes").glob("*.md"), reverse=True)[:3]
     if reunioes:
         linhas += ["", "### Últimos registros"] + [f"- reunioes/{r.name}" for r in reunioes]
@@ -391,20 +405,31 @@ def validar_origem(texto: str, pasta: Path) -> str:
     return texto
 
 
-def inserir_na_secao(texto: str, secao: str, linha: str) -> str:
-    linhas = texto.splitlines()
+def inserir_em_secao(linhas: list[str], secao: str, novas: list[str], topo: bool) -> list[str]:
+    """Insere `novas` em `## secao`: no topo (encerradas, mais recente primeiro) ou no fim do
+    bloco de topo, antes da primeira subseção `###`. Cria a seção no fim se não existir."""
     cabecalho = f"## {secao}"
     if cabecalho not in linhas:
-        linhas += ["", cabecalho]
+        linhas = linhas + ["", cabecalho]
     i = linhas.index(cabecalho)
-    j = i + 1
-    while j < len(linhas) and not linhas[j].startswith("## "):
-        j += 1
-    k = j
-    while k > i + 1 and linhas[k - 1].strip() == "":
-        k -= 1
-    linhas.insert(k, linha)
-    return "\n".join(linhas) + "\n"
+    fim = i + 1
+    while fim < len(linhas) and not linhas[fim].startswith("## "):
+        fim += 1
+    if topo:
+        k = i + 1
+        while k < fim and (not linhas[k].strip() or linhas[k].lstrip().startswith("<!--")):
+            k += 1
+    else:
+        k = next((j for j in range(i + 1, fim) if linhas[j].startswith("### ")), fim)
+        while k > i + 1 and not linhas[k - 1].strip():
+            k -= 1
+    return linhas[:k] + novas + linhas[k:]
+
+
+def gravar_atomico(arquivo: Path, texto: str) -> None:
+    tmp = arquivo.with_name(f".{arquivo.name}.tmp")
+    tmp.write_text(texto, encoding="utf-8")
+    os.replace(tmp, arquivo)
 
 
 def adicionar_pendencia(frente: Frente, descricao: str, responsavel: str, urgente: bool = False,
@@ -424,7 +449,8 @@ def adicionar_pendencia(frente: Frente, descricao: str, responsavel: str, urgent
     linha = "- [ ] " + SEPARADOR.join(partes)
     arquivo = frente.pasta / "PENDENCIAS.md"
     texto = arquivo.read_text(encoding="utf-8") if arquivo.is_file() else "# Pendências\n"
-    arquivo.write_text(inserir_na_secao(texto, "Urgente" if urgente else "Em aberto", linha), encoding="utf-8")
+    linhas = inserir_em_secao(texto.splitlines(), "Urgente" if urgente else "Em aberto", [linha], topo=False)
+    gravar_atomico(arquivo, "\n".join(linhas) + "\n")
     return linha
 
 
@@ -500,9 +526,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{len(erros)} inconsistência(s)")
         return 1
     if comando == "frente":
-        f = next((x for x in frentes if x.id == args.id), None)
-        if f is None:
-            print(f"frente não encontrada: {args.id}")
+        try:
+            f = resolver_frente(frentes, args.id)
+        except ValueError as e:
+            print(e)
             return 1
         print("\n".join(renderizar_frente(f, erros)))
         return 0
@@ -511,4 +538,5 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
+    sys.modules.setdefault("desk", sys.modules[__name__])
     sys.exit(main())

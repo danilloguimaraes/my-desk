@@ -214,6 +214,15 @@ class PainelTests(unittest.TestCase):
             self.assertIn("- [ativa-x] Fechar contrato — @Danillo — 2026-10-20", saida)
             self.assertNotIn("Entregar relatório", saida)
 
+    def test_frente_numera_pendencias_abertas(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raiz = Path(tmp)
+            criar_frente(raiz, "f", pendencias="## Urgente\n- [ ] A — @D — crítica\n## Em aberto\n- [ ] B — @D\n")
+            frentes, erros = desk.carregar(raiz)
+            saida = "\n".join(desk.renderizar_frente(frentes[0], erros))
+            self.assertIn("1. [URGENTE] A — @D", saida)
+            self.assertIn("2. B — @D", saida)
+
 
 class AddTests(unittest.TestCase):
     def setUp(self):
@@ -257,6 +266,43 @@ class AddTests(unittest.TestCase):
         self.assertEqual(codigo, 0)
         texto = (self.raiz / "frente-a" / "PENDENCIAS.md").read_text(encoding="utf-8")
         self.assertIn("## Urgente\n- [ ] Ler o paper — @Danillo", texto)
+
+
+class PrimitivasTests(unittest.TestCase):
+    TEXTO = ("# P\n\n## Urgente\n\n## Em aberto\n\n- [ ] A — @D\n\n### Sub\n\n- [ ] B — @D\n\n"
+             "## Concluídas\n\n<!-- mover para cá -->\n\n- [x] C — @D — concluída em 2026-10-01\n")
+
+    def test_insere_no_fim_do_bloco_de_topo_antes_da_subsecao(self):
+        linhas = desk.inserir_em_secao(self.TEXTO.splitlines(), "Em aberto", ["- [ ] N — @D"], topo=False)
+        texto = "\n".join(linhas)
+        self.assertIn("- [ ] A — @D\n- [ ] N — @D\n\n### Sub", texto)
+
+    def test_insere_no_topo_de_concluidas_depois_do_comentario(self):
+        linhas = desk.inserir_em_secao(self.TEXTO.splitlines(), "Concluídas", ["- [x] N"], topo=True)
+        self.assertIn("<!-- mover para cá -->\n\n- [x] N\n- [x] C", "\n".join(linhas))
+
+    def test_cria_secao_ausente_no_fim(self):
+        linhas = desk.inserir_em_secao(self.TEXTO.splitlines(), "Descartadas", ["- [-] N"], topo=True)
+        self.assertEqual(linhas[-2:], ["## Descartadas", "- [-] N"])
+
+    def test_resolve_frente_por_sufixo_unico(self):
+        frentes = [desk.Frente("dgolabs/noesis", Path("x")), desk.Frente("simcaq", Path("y"))]
+        self.assertEqual(desk.resolver_frente(frentes, "noesis").id, "dgolabs/noesis")
+        self.assertEqual(desk.resolver_frente(frentes, "simcaq").id, "simcaq")
+        with self.assertRaises(ValueError):
+            desk.resolver_frente(frentes, "nada")
+
+    def test_sufixo_ambiguo_recusado(self):
+        frentes = [desk.Frente("a/x", Path("1")), desk.Frente("b/x", Path("2"))]
+        with self.assertRaises(ValueError):
+            desk.resolver_frente(frentes, "x")
+
+    def test_gravar_atomico(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            arq = Path(tmp) / "P.md"
+            desk.gravar_atomico(arq, "oi\n")
+            self.assertEqual(arq.read_text(encoding="utf-8"), "oi\n")
+            self.assertEqual([p.name for p in Path(tmp).iterdir()], ["P.md"])
 
 
 if __name__ == "__main__":

@@ -63,6 +63,19 @@ class InterpretarTests(unittest.TestCase):
     def test_sem_itens_cancela(self):
         self.assertTrue(self.ler("# só comentário\n## Urgente\n").cancelado)
 
+    def test_so_linha_malformada_nao_cancela_em_silencio(self):
+        r = self.ler("- [ ] X — @D\n")
+        self.assertFalse(r.cancelado)
+        self.assertTrue(any("esperado" in e for e in r.erros))
+
+    def test_concluir_sem_responsavel_original_e_erro(self):
+        r = self.ler(self.buf.replace("3 [ ] C — @D", "3 [x] C"))
+        self.assertTrue(any("falta '— @responsável'" in e for e in r.erros))
+
+    def test_concluir_mantendo_responsavel_passa(self):
+        r = self.ler(self.buf.replace("3 [ ] C — @D", "3 [x] C — @D"))
+        self.assertEqual(r.erros, [])
+
 
 class AplicarTests(unittest.TestCase):
     def test_tirar_a_unica_critica_e_erro_novo(self):

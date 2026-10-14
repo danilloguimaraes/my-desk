@@ -95,10 +95,14 @@ def interpretar_buffer(buffer: str, itens: list[esc.Item]) -> Leitura:
                 r.novas.append(esc.Mudanca("aberta", secao, conteudo))
             continue
         it = por_chave[int(chave)]
+        responsavel = [c for c in esc.campos(it.conteudo)[1:] if c.startswith("@") and len(c) > 1]
+        if responsavel and not any(c.startswith("@") and len(c) > 1 for c in esc.campos(conteudo)[1:]):
+            r.erros.append(f"{ref}: falta '— @responsável' (era {responsavel[0]})")
+            continue
         if situacao == "aberta" and secao == it.secao and conteudo == it.conteudo.strip():
             continue
         r.mudancas[int(chave)] = esc.Mudanca(situacao, secao, conteudo)
-    if not algum:
+    if not algum and not r.erros:
         return Leitura(cancelado=True)
     faltando = sorted(set(por_chave) - vistas)
     if faltando:

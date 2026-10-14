@@ -281,6 +281,12 @@ class PrimitivasTests(unittest.TestCase):
         linhas = desk.inserir_em_secao(self.TEXTO.splitlines(), "Concluídas", ["- [x] N"], topo=True)
         self.assertIn("<!-- mover para cá -->\n\n- [x] N\n- [x] C", "\n".join(linhas))
 
+    def test_insere_no_topo_depois_de_comentario_multilinha(self):
+        texto = "# P\n\n## Concluídas\n\n<!-- nota\nexplicando -->\n\n- [x] C — @D — concluída em 2026-10-01\n"
+        linhas = desk.inserir_em_secao(texto.splitlines(), "Concluídas", ["- [x] N"], topo=True)
+        saida = "\n".join(linhas)
+        self.assertIn("explicando -->\n\n- [x] N\n- [x] C", saida)
+
     def test_cria_secao_ausente_no_fim(self):
         linhas = desk.inserir_em_secao(self.TEXTO.splitlines(), "Descartadas", ["- [-] N"], topo=True)
         self.assertEqual(linhas[-2:], ["## Descartadas", "- [-] N"])

@@ -417,7 +417,13 @@ def inserir_em_secao(linhas: list[str], secao: str, novas: list[str], topo: bool
         fim += 1
     if topo:
         k = i + 1
-        while k < fim and (not linhas[k].strip() or linhas[k].lstrip().startswith("<!--")):
+        dentro = False  # dentro de um comentário HTML que abre e fecha em linhas diferentes
+        while k < fim:
+            limpa = linhas[k].strip()
+            if dentro or limpa.startswith("<!--"):
+                dentro = "-->" not in limpa
+            elif limpa:
+                break
             k += 1
     else:
         k = next((j for j in range(i + 1, fim) if linhas[j].startswith("### ")), fim)
@@ -538,5 +544,4 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.modules.setdefault("desk", sys.modules[__name__])
     sys.exit(main())

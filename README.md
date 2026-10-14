@@ -1,6 +1,6 @@
 # My Desk
 
-Espaço pessoal de organização das minhas frentes de atuação. Cada frente tem uma pasta autocontida; este arquivo é o painel consolidado.
+Espaço pessoal de organização das minhas frentes de atuação. Cada frente tem uma pasta autocontida; o painel consolidado não é mais mantido aqui, pois é gerado sob demanda pelo comando `desk` (AD-1 em ARQUITETURA.md), e este README é apenas a ficha estática do repositório.
 
 ## Contexto Rápido
 

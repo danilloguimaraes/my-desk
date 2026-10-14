@@ -6,7 +6,7 @@ Criado em 13/10/2026. Materialização concreta de [ARQUITETURA.md](ARQUITETURA.
 
 ## Tecnologia
 
-Python 3 (>= 3.10), stdlib apenas, com `desk.py` como motor e um wrapper `desk` na raiz. A UX final é `desk <comando>`, com testes em `test_desk.py` usando `unittest`.
+Python 3 (>= 3.10), stdlib apenas, com `desk.py` como motor e um wrapper `desk` na raiz. A UX final é `desk <comando>`, com testes em `test_desk.py`, `test_escrita.py` e `test_triagem.py`, executados com `python3 -m unittest`.
 
 ## Referência rápida
 

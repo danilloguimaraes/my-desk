@@ -103,6 +103,11 @@ class GramaticaTests(unittest.TestCase):
         _, erros = desk.interpretar_pendencia("- [ ] X — @D", "Descartadas", 1)
         self.assertTrue(any("aberta em 'Descartadas'" in e for e in erros))
 
+    def test_motivo_com_separador_e_erro(self):
+        _, erros = desk.interpretar_pendencia(
+            "- [-] X — @D — descartada em 2026-10-01 — motivo: a — b", "Descartadas", 1)
+        self.assertTrue(any("não pode conter ' — '" in e for e in erros))
+
 
 class FichaTests(unittest.TestCase):
     def test_le_tabela(self):

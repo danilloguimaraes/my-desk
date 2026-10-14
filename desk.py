@@ -193,6 +193,8 @@ def interpretar_pendencia(linha: str, secao: str, numero: int) -> tuple[Pendenci
             p.origem = campo[len("origem: "):].strip()
         elif campo == "crítica":
             p.critica = True
+        elif p.motivo is not None:
+            erros.append("trecho após 'motivo:' — o motivo não pode conter ' — '")
         else:
             # Compatibilidade legada: campos textuais livres viram contexto e não bloqueiam a leitura.
             pass

@@ -18,3 +18,67 @@ class RenderizarTests(unittest.TestCase):
         self.assertIn("## Urgente\n1 [ ] A — @D — crítica\n\n## Em aberto\n"
                       "2 [ ] B — @D — [issue](https://x)\n# ### Sub\n3 [ ] C — @D\n", buf)
         self.assertNotIn("Z — @D", buf)
+
+
+class InterpretarTests(unittest.TestCase):
+    def setUp(self):
+        self.itens = esc.itens_abertos(TEXTO)
+        self.buf = t.renderizar_buffer("f", TEXTO)
+
+    def ler(self, buf):
+        return t.interpretar_buffer(buf, self.itens)
+
+    def test_buffer_intacto_nao_muda_nada(self):
+        r = self.ler(self.buf)
+        self.assertEqual((r.mudancas, r.novas, r.erros, r.cancelado), ({}, [], [], False))
+
+    def test_concluir_e_mover(self):
+        buf = self.buf.replace("3 [ ] C — @D", "3 [x] C — @D")
+        buf = buf.replace("2 [ ] B — @D — [issue](https://x)\n", "").replace(
+            "## Urgente\n", "## Urgente\n2 [ ] B — @D — [issue](https://x)\n")
+        r = self.ler(buf)
+        self.assertEqual(r.erros, [])
+        self.assertEqual(r.mudancas[3].situacao, "concluída")
+        self.assertEqual((r.mudancas[2].situacao, r.mudancas[2].secao), ("aberta", "Urgente"))
+
+    def test_descarte_sem_motivo(self):
+        r = self.ler(self.buf.replace("3 [ ] C — @D", "3 [-] C — @D"))
+        self.assertEqual(r.erros, ["nº 3: descarte exige '— motivo: ...'"])
+
+    def test_linha_apagada_e_erro(self):
+        r = self.ler(self.buf.replace("3 [ ] C — @D\n", ""))
+        self.assertIn("nº 3 sumiram do buffer; para encerrar use [x] ou [-]", r.erros)
+
+    def test_numero_inexistente_e_repetido(self):
+        r = self.ler(self.buf + "9 [ ] X — @D\n3 [ ] C — @D\n")
+        self.assertIn("nº 9: não existe nesta versão do arquivo", r.erros)
+        self.assertIn("nº 3: repetido", r.erros)
+
+    def test_nova_exige_responsavel(self):
+        self.assertIn("'[ ] Nova sem dono': pendência nova exige '— @responsável'",
+                      self.ler(self.buf + "[ ] Nova sem dono\n").erros)
+        r = self.ler(self.buf + "[ ] Nova — @D\n")
+        self.assertEqual((r.erros, r.novas[0].conteudo, r.novas[0].secao), ([], "Nova — @D", "Em aberto"))
+
+    def test_sem_itens_cancela(self):
+        self.assertTrue(self.ler("# só comentário\n## Urgente\n").cancelado)
+
+
+class AplicarTests(unittest.TestCase):
+    def test_tirar_a_unica_critica_e_erro_novo(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            criar_frente(Path(tmp), "f", pendencias=TEXTO)
+            frente = desk.carregar(Path(tmp))[0][0]
+            buf = t.renderizar_buffer("f", TEXTO).replace("1 [ ] A — @D — crítica", "1 [x] A — @D")
+            novo, erros, _ = t.aplicar_buffer(frente, TEXTO, buf, HOJE)
+            self.assertTrue(any("(tem 0)" in e for e in erros))
+
+    def test_aplicacao_valida_devolve_texto_novo(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            criar_frente(Path(tmp), "f", pendencias=TEXTO)
+            frente = desk.carregar(Path(tmp))[0][0]
+            buf = t.renderizar_buffer("f", TEXTO).replace("3 [ ] C — @D", "3 [-] C — @D — motivo: obsoleto")
+            novo, erros, leitura = t.aplicar_buffer(frente, TEXTO, buf, HOJE)
+            self.assertEqual(erros, [])
+            self.assertIn("- [-] C — @D — descartada em 2026-10-13 — motivo: obsoleto", novo)
+            self.assertEqual(t.resumir(leitura), "1 descartada(s)")

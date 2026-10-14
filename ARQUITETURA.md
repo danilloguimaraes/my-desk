@@ -9,7 +9,7 @@ Criado em 13/10/2026. Decide como os conceitos de [DOMINIO.md](DOMINIO.md) se ma
 | Componente | Papel | Fronteira |
 |---|---|---|
 | **Estado** | Arquivos markdown por conceito-fonte, em layout fixo por frente | Editável por humano e LLM; nunca escrito por ferramenta |
-| **Ingestão** | Experiência desenhada em duas vias — conversada (despejo livre estruturado pelo agente) e assistida (comando que pergunta os campos e escreve a linha canônica) — convergindo para a Verificação; edição direta é saída de emergência | A gramática nunca é carga do usuário |
+| **Ingestão** | Experiência desenhada em duas vias — conversada (despejo livre estruturado pelo agente) e assistida (comando que pergunta os campos e escreve a linha canônica) — convergindo para a Verificação; edição direta é saída de emergência; cobre criação e transições (AD-7) | A gramática nunca é carga do usuário |
 | **Verificação** | Comando `desk check` (nome provisório) que aplica as invariantes do modelo; portão obrigatório de persistência | Somente leitura sobre o estado; falha produz relatório e bloqueia o commit |
 | **Derivação** | Cálculo das projeções no momento da consulta | Nunca materializa resultado em arquivo, nunca é commitada |
 | **Apresentação** | CLI de leitura: painel, urgentes, frente individual | O único ponto de consulta (RF-N1.4); não conhece escrita |
@@ -41,6 +41,7 @@ Criado em 13/10/2026. Decide como os conceitos de [DOMINIO.md](DOMINIO.md) se ma
 - **AD-4 · A ficha da frente é o README.md da própria frente**, com uma seção estruturada (campos da Frente) no topo e o contexto livre abaixo. Alternativa descartada: arquivo separado (`FRENTE.md`) — reusa o que já existe em todas as frentes e reduz a migração.
 - **AD-5 · AGENTS.md muda de papel.** Deixa de registrar o conjunto de frentes (a fonte é o filesystem, por decisão do modelo) e passa a registrar as gramáticas de ingestão e o contrato do agente. A tabela de frentes sai dele.
 - **AD-6 · O estado só pode ser persistido válido.** `desk check` deixa de ser comando eventual e vira **portão obrigatório de commit** (hook local de pre-commit): estado inválido não entra no repositório. Motivo: o estado tem múltiplos canais de escrita (humano, LLM, merge, edição direta), e validação na entrada de um único canal nunca garante os demais — a consistência só é garantível no ponto onde o estado se torna oficial. Se um dia houver repositório remoto, a CI repete o mesmo check.
+- **AD-7 · Ingestão cobre o ciclo de vida, não só o nascimento.** A via assistida ganha verbos de transição (concluir, descartar, mudar prioridade, transferir a crítica) e uma triagem em lote num buffer de editor; ambos compartilham um núcleo de escrita que valida o resultado e recusa apenas o que piora o estado. Argumentos de linha de comando são aceitos para *selecionar* itens e para uso por agentes (`--sim`, `--exportar`/`--aplicar`); isso não reabre a alternativa descartada em AD-2, que tratava da *captura* de texto livre. Motivo: com escrita só na criação, toda alteração caía na edição direta, que AD-2 define como saída de emergência. Aprovado em 13/10/2026.
 
 ## Cobertura dos requisitos de N1
 

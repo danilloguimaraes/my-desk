@@ -29,22 +29,6 @@ Se você chegou aqui para usar a documentação, siga esta ordem:
 | [Preleção](dgolabs/prelecao/) | Criador e Operador (produto dgolabs) | Ativo — backend v0 entregue (fatia Fechar Chamada → Cobrança Avulsa); mensalidade, avaliação e escalação pendentes | Implementar Tesouraria de Mensalistas (Competência) |
 | [my-skills](my-skills/) | Criador e mantenedor de skills pessoais | Ativo — skills novas em iteração | Testar `desk-sync` em projeto real e ajustar |
 
-## Pendências urgentes (todas as frentes)
-
-- [ ] **SimCAQ** — Definir quem fica com as 2 bolsas — 24/09/2026
-- [ ] **SimCAQ** — Restabelecer contato com Leonardo — imediato
-- [ ] **Denodare** — #126: alinhar com Afonso revisor dos ADRs `Accepted` e validação das divergências 0005/0016/0018 antes de abrir MR — próximo passo
-- [ ] **Denodare** — #207: confirmar com Afonso quais dos 3 bloqueantes seguem abertos após !401 — esta semana
-- [ ] **Noesis** — Reconciliar E10.2 #44: CLOSED no GitHub, desk o trata como gate de E11 — próxima sessão
-- [ ] **PDC 1** — Deploy bloqueado: ADK web ok, mas execução via API falha por incompatibilidade do processador do servidor — imediato
-- [ ] **PDC 1** — Confirmar arquitetura do servidor com Danilo Ramos e viabilizar alternativa compatível — imediato
-- [ ] **PDC 1** — Executar HumanEval com as LLMs definidas e gerar relatórios — após o deploy
-- [ ] **Trantor** — Fechar/atualizar issues de E12 e E13 após merges de PR #134 e #142 — esta semana
-- [ ] **Trantor** — Refazer #84 (E12 · Interface & E2E) que falhou por `model_overloaded` — esta semana
-- [ ] **my-skills** — Testar `desk-sync` em projeto real (denodare, trantor ou noesis) e ajustar SKILL.md — próxima sessão
-
-_Manter esta lista como espelho das seções "Urgente" de cada `PENDENCIAS.md`._
-
 ## Estrutura de cada projeto
 
 ```

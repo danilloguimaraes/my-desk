@@ -36,11 +36,11 @@ PDC 1 e PDC 2 são projetos independentes. `dgolabs/` agrupa projetos pessoais d
 ## Regras ao registrar
 
 1. **Toda reunião gera propagação.** Ao criar uma ata, extrair para os arquivos vivos: ações → `PENDENCIAS.md`, decisões → `DECISOES.md`, pessoas novas → `PESSOAS.md`, e adicionar linha na "Linha do tempo recente" do `README.md` do projeto.
-2. **Painel raiz espelha o urgente.** Pendências marcadas como Urgente em qualquer projeto aparecem também em `README.md` da raiz; ao concluir, remover de ambos.
-3. **Links relativos** entre ata, rascunho e arquivos vivos (origem da pendência, fonte da decisão).
-4. **Pendência concluída** move para a seção "Concluídas" com data, não é apagada.
-5. **Datas** sempre `YYYY-MM-DD` em nomes de arquivo; `DD/MM/YYYY` no texto.
-6. Não criar novas categorias de pasta sem necessidade; preferir arquivos datados nas pastas existentes.
+2. **Links relativos** entre ata, rascunho e arquivos vivos (origem da pendência, fonte da decisão).
+3. **Pendência encerrada não é apagada.** Concluída vai para "Concluídas" com `concluída em AAAA-MM-DD`; descartada vai para "Descartadas" com `descartada em AAAA-MM-DD — motivo: ...`.
+4. **Datas** sempre `YYYY-MM-DD` em nomes de arquivo; `DD/MM/YYYY` no texto.
+5. Não criar novas categorias de pasta sem necessidade; preferir arquivos datados nas pastas existentes.
+6. **Agente altera pendências pelo `desk`, não pelo markdown.** Mudança pontual: `desk <verbo> <frente> <nº> --sim`. Várias mudanças: `desk triagem <frente> --exportar`, editar o buffer, mostrar ao usuário, `desk triagem <frente> --aplicar <arquivo>`. Edição direta de `PENDENCIAS.md` é saída de emergência.
 
 ## Estilo
 

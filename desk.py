@@ -525,6 +525,11 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--sim", action="store_true", help="não pergunta (uso por agentes)")
         if verbo == "descartar":
             p.add_argument("--motivo")
+    p_tri = sub.add_parser("triagem", help="revisa em lote as pendências abertas de uma frente no editor")
+    p_tri.add_argument("frente")
+    modo = p_tri.add_mutually_exclusive_group()
+    modo.add_argument("--exportar", action="store_true", help="imprime o buffer (uso por agentes)")
+    modo.add_argument("--aplicar", metavar="ARQUIVO", help="aplica um buffer editado; '-' lê da entrada padrão")
     args = parser.parse_args(argv)
     comando = args.comando or "painel"
 
@@ -532,6 +537,20 @@ def main(argv: list[str] | None = None) -> int:
         return assistente(RAIZ)
 
     frentes, erros = carregar(RAIZ)
+    if comando == "triagem":
+        import desk_triagem
+        try:
+            f = resolver_frente(frentes, args.frente)
+        except ValueError as e:
+            print(f"erro: {e}")
+            return 1
+        if args.exportar:
+            print(desk_triagem.exportar(f), end="")
+            return 0
+        if args.aplicar:
+            buffer = sys.stdin.read() if args.aplicar == "-" else Path(args.aplicar).read_text(encoding="utf-8")
+            return desk_triagem.aplicar_arquivo(f, buffer)
+        return desk_triagem.triar(f)
     if comando in ("feito", "descartar", "urgente", "normal", "critica"):
         import desk_escrita
         try:

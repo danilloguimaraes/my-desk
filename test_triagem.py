@@ -95,3 +95,50 @@ class AplicarTests(unittest.TestCase):
             self.assertEqual(erros, [])
             self.assertIn("- [-] C — @D — descartada em 2026-10-13 — motivo: obsoleto", novo)
             self.assertEqual(t.resumir(leitura), "1 descartada(s)")
+
+
+class LacoTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.pasta = criar_frente(Path(self._tmp.name), "f", pendencias=TEXTO)
+        self.frente = desk.carregar(Path(self._tmp.name))[0][0]
+        self.saida: list[str] = []
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def texto(self):
+        return (self.pasta / "PENDENCIAS.md").read_text(encoding="utf-8")
+
+    def test_erro_reabre_com_anotacao_e_depois_grava(self):
+        vistos: list[str] = []
+        edicoes = iter([lambda b: b.replace("3 [ ] C — @D", "3 [-] C — @D"),
+                        lambda b: b.replace("3 [-] C — @D", "3 [-] C — @D — motivo: obsoleto")])
+
+        def editor(buf):
+            vistos.append(buf)
+            return next(edicoes)(buf)
+
+        self.assertEqual(t.triar(self.frente, editar=editor, hoje=HOJE, saida=self.saida.append), 0)
+        self.assertIn("# ! nº 3: descarte exige '— motivo: ...'", vistos[1])
+        self.assertIn("- [-] C — @D — descartada em 2026-10-13 — motivo: obsoleto", self.texto())
+        self.assertEqual(self.saida[-1], "ok: f — 1 descartada(s)")
+
+    def test_buffer_vazio_cancela(self):
+        self.assertEqual(t.triar(self.frente, editar=lambda b: "", hoje=HOJE, saida=self.saida.append), 1)
+        self.assertEqual(self.texto(), TEXTO)
+
+    def test_sem_mudanca(self):
+        self.assertEqual(t.triar(self.frente, editar=lambda b: b, hoje=HOJE, saida=self.saida.append), 0)
+        self.assertEqual(self.saida[-1], "nada mudou")
+
+    def test_aplicar_recusa_versao_velha(self):
+        buf = t.exportar(self.frente)
+        (self.pasta / "PENDENCIAS.md").write_text(TEXTO + "- [ ] tarde — @D\n", encoding="utf-8")
+        self.assertEqual(t.aplicar_arquivo(self.frente, buf, hoje=HOJE, saida=self.saida.append), 1)
+        self.assertIn("mudou desde a exportação", self.saida[-1])
+
+    def test_aplicar_arquivo_valido(self):
+        buf = t.exportar(self.frente).replace("2 [ ] B", "2 [x] B")
+        self.assertEqual(t.aplicar_arquivo(self.frente, buf, hoje=HOJE, saida=self.saida.append), 0)
+        self.assertIn("- [x] B — @D — [issue](https://x) — concluída em 2026-10-13", self.texto())

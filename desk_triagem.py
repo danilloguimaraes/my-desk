@@ -5,14 +5,22 @@ Contrato do buffer: SOLUCAO.md. As transições são as de desk_escrita.
 from __future__ import annotations
 
 import hashlib
+import os
 import re
+import shlex
+import subprocess
+import tempfile
 from dataclasses import dataclass, field
 from datetime import date
+from pathlib import Path
+from typing import Callable
 
 import desk
 import desk_escrita as esc
 
 LINHA_RE = re.compile(r"^(?:(\d+)\s+)?\[( |x|-)\]\s+(.+?)\s*$")
+MARCA_ERRO = "# ! "
+VERSAO_RE = re.compile(r"^# desk triagem (\S+) — versão ([0-9a-f]{8})$")
 
 AJUDA = [
     "# Marcas: [ ] aberta · [x] concluir hoje · [-] descartar (exige '— motivo: ...')",
@@ -129,3 +137,90 @@ def resumir(leitura: Leitura) -> str:
     if leitura.novas:
         partes.append(f"{len(leitura.novas)} nova(s)")
     return ", ".join(partes) or "nada mudou"
+
+
+class Cancelado(Exception):
+    pass
+
+
+def editor_do_sistema(buffer: str) -> str:
+    comando = os.environ.get("VISUAL") or os.environ.get("EDITOR") or "vi"
+    with tempfile.NamedTemporaryFile("w", suffix=".desk-triagem.md", delete=False, encoding="utf-8") as f:
+        f.write(buffer)
+        caminho = f.name
+    try:
+        if subprocess.run([*shlex.split(comando), caminho]).returncode != 0:
+            raise Cancelado("o editor saiu com erro")
+        return Path(caminho).read_text(encoding="utf-8")
+    finally:
+        os.unlink(caminho)
+
+
+def remover_erros(buffer: str) -> str:
+    return "".join(l for l in buffer.splitlines(keepends=True) if not l.startswith(MARCA_ERRO))
+
+
+def anotar_erros(buffer: str, erros: list[str]) -> str:
+    linhas = buffer.splitlines()
+    k = 1 if linhas and linhas[0].startswith("# desk triagem") else 0
+    return "\n".join(linhas[:k] + [f"{MARCA_ERRO}{e}" for e in erros] + linhas[k:]) + "\n"
+
+
+def _gravar(frente: desk.Frente, texto: str, novo: str, leitura: Leitura,
+            saida: Callable[[str], None]) -> int:
+    arquivo = frente.pasta / "PENDENCIAS.md"
+    if novo == texto:
+        saida("nada mudou")
+        return 0
+    if arquivo.read_text(encoding="utf-8") != texto:
+        saida("recusado: PENDENCIAS.md mudou durante a triagem; rode de novo")
+        return 1
+    desk.gravar_atomico(arquivo, novo)
+    saida(f"ok: {frente.id} — {resumir(leitura)}")
+    return 0
+
+
+def triar(frente: desk.Frente, editar: Callable[[str], str] = editor_do_sistema,
+          hoje: date | None = None, saida: Callable[[str], None] = print) -> int:
+    hoje = hoje or date.today()
+    texto = (frente.pasta / "PENDENCIAS.md").read_text(encoding="utf-8")
+    buffer = renderizar_buffer(frente.id, texto)
+    while True:
+        try:
+            buffer = remover_erros(editar(buffer))
+        except Cancelado as e:
+            saida(f"triagem cancelada ({e}); nada foi gravado")
+            return 1
+        novo, erros, leitura = aplicar_buffer(frente, texto, buffer, hoje)
+        if novo is None:
+            saida("triagem cancelada; nada foi gravado")
+            return 1
+        if not erros:
+            return _gravar(frente, texto, novo, leitura, saida)
+        buffer = anotar_erros(buffer, erros)
+
+
+def exportar(frente: desk.Frente) -> str:
+    return renderizar_buffer(frente.id, (frente.pasta / "PENDENCIAS.md").read_text(encoding="utf-8"))
+
+
+def aplicar_arquivo(frente: desk.Frente, buffer: str, hoje: date | None = None,
+                    saida: Callable[[str], None] = print) -> int:
+    texto = (frente.pasta / "PENDENCIAS.md").read_text(encoding="utf-8")
+    primeira = buffer.splitlines()[0] if buffer.strip() else ""
+    m = VERSAO_RE.match(primeira)
+    if not m or m.group(1) != frente.id:
+        saida(f"recusado: o buffer não tem o cabeçalho de triagem de {frente.id}")
+        return 1
+    if m.group(2) != versao(texto):
+        saida("recusado: PENDENCIAS.md mudou desde a exportação; exporte de novo")
+        return 1
+    novo, erros, leitura = aplicar_buffer(frente, texto, remover_erros(buffer), hoje or date.today())
+    if novo is None:
+        saida("buffer sem itens: nada foi gravado")
+        return 1
+    if erros:
+        for e in erros:
+            saida(f"  ! {e}")
+        return 1
+    return _gravar(frente, texto, novo, leitura, saida)

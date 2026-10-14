@@ -25,7 +25,7 @@ PENDENCIAS_OK = """# Pendências
 ## Em aberto
 
 ## Concluídas
-- [x] Entregar relatório — @Danillo — concluída: 2026-10-01
+- [x] Entregar relatório — @Danillo — concluída em 2026-10-01
 """
 
 
@@ -52,30 +52,32 @@ class GramaticaTests(unittest.TestCase):
         self.assertTrue(p.urgente)
 
     def test_concluida_com_data(self):
-        p, erros = desk.interpretar_pendencia("- [x] Entregar — @Danillo — concluída: 2026-10-01",
+        p, erros = desk.interpretar_pendencia("- [x] Entregar — @Danillo — concluída em 2026-10-01",
                                               "Concluídas", 1)
         self.assertEqual(erros, [])
         self.assertFalse(p.aberta)
         self.assertEqual(p.concluida_em, "2026-10-01")
 
-    def test_campo_desconhecido(self):
-        _, erros = desk.interpretar_pendencia("- [ ] X — @D — foo", "Em aberto", 1)
-        self.assertTrue(any("campo não reconhecido" in e for e in erros))
+    def test_campo_livre_legado_tolerado(self):
+        p, erros = desk.interpretar_pendencia("- [ ] X — @D — foo", "Em aberto", 1)
+        self.assertEqual(erros, [])
+        self.assertEqual(p.descricao, "X")
 
-    def test_responsavel_ausente(self):
-        _, erros = desk.interpretar_pendencia("- [ ] X", "Em aberto", 1)
-        self.assertTrue(any("responsável ausente" in e for e in erros))
+    def test_responsavel_ausente_tolerado_na_leitura(self):
+        p, erros = desk.interpretar_pendencia("- [ ] X", "Em aberto", 1)
+        self.assertEqual(erros, [])
+        self.assertIsNone(p.responsavel)
 
     def test_data_invalida_nao_e_prazo(self):
-        _, erros = desk.interpretar_pendencia("- [ ] X — @D — 2026-13-40", "Em aberto", 1)
-        self.assertTrue(any("campo não reconhecido" in e for e in erros))
+        p, _ = desk.interpretar_pendencia("- [ ] X — @D — 2026-13-40", "Em aberto", 1)
+        self.assertIsNone(p.prazo)
 
     def test_aberta_em_concluidas(self):
         _, erros = desk.interpretar_pendencia("- [ ] X — @D", "Concluídas", 1)
         self.assertTrue(any("aberta em 'Concluídas'" in e for e in erros))
 
     def test_concluida_fora_de_concluidas(self):
-        _, erros = desk.interpretar_pendencia("- [x] X — @D — concluída: 2026-10-01", "Em aberto", 1)
+        _, erros = desk.interpretar_pendencia("- [x] X — @D — concluída em 2026-10-01", "Em aberto", 1)
         self.assertTrue(any("fora de 'Concluídas'" in e for e in erros))
 
 
@@ -114,8 +116,13 @@ class CheckTests(unittest.TestCase):
 
     def test_artefato_nao_reconhecido(self):
         pasta = criar_frente(self.raiz, "frente-a")
-        (pasta / "monitoramento.md").write_text("log", encoding="utf-8")
+        (pasta / "anotacoes.md").write_text("log", encoding="utf-8")
         self.assertTrue(any("artefato não reconhecido" in e for e in self.erros()))
+
+    def test_artefato_legado_tolerado(self):
+        pasta = criar_frente(self.raiz, "frente-a")
+        (pasta / "monitoramento.md").write_text("log", encoding="utf-8")
+        self.assertEqual(self.erros(), [])
 
     def test_sem_critica_em_ativa(self):
         criar_frente(self.raiz, "frente-a", pendencias="## Urgente\n\n## Em aberto\n\n## Concluídas\n")

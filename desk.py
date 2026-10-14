@@ -161,7 +161,7 @@ def interpretar_pendencia(linha: str, secao: str, numero: int) -> tuple[Pendenci
     if aberta and p.concluida_em:
         erros.append("pendência aberta com data de conclusão")
     if not aberta and p.concluida_em is None:
-        erros.append("pendência concluída sem 'concluída: AAAA-MM-DD'")
+        erros.append("pendência concluída sem 'concluída em AAAA-MM-DD'")
     if aberta and secao == "Concluídas":
         erros.append("pendência aberta em 'Concluídas'")
     if not aberta and secao != "Concluídas":

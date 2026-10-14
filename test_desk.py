@@ -80,6 +80,29 @@ class GramaticaTests(unittest.TestCase):
         _, erros = desk.interpretar_pendencia("- [x] X — @D — concluída em 2026-10-01", "Em aberto", 1)
         self.assertTrue(any("fora de 'Concluídas'" in e for e in erros))
 
+    def test_descartada_completa(self):
+        p, erros = desk.interpretar_pendencia(
+            "- [-] Migrar X — @D — descartada em 2026-10-13 — motivo: absorvido pela refundação",
+            "Descartadas", 1)
+        self.assertEqual(erros, [])
+        self.assertEqual(p.situacao, "descartada")
+        self.assertFalse(p.aberta)
+        self.assertEqual(p.descartada_em, "2026-10-13")
+        self.assertEqual(p.motivo, "absorvido pela refundação")
+
+    def test_descartada_sem_motivo(self):
+        _, erros = desk.interpretar_pendencia("- [-] X — @D — descartada em 2026-10-13", "Descartadas", 1)
+        self.assertTrue(any("sem 'motivo: ...'" in e for e in erros))
+
+    def test_descartada_fora_de_descartadas(self):
+        _, erros = desk.interpretar_pendencia(
+            "- [-] X — @D — descartada em 2026-10-13 — motivo: m", "Concluídas", 1)
+        self.assertTrue(any("fora de 'Descartadas'" in e for e in erros))
+
+    def test_aberta_em_descartadas(self):
+        _, erros = desk.interpretar_pendencia("- [ ] X — @D", "Descartadas", 1)
+        self.assertTrue(any("aberta em 'Descartadas'" in e for e in erros))
+
 
 class FichaTests(unittest.TestCase):
     def test_le_tabela(self):
@@ -159,6 +182,17 @@ class CheckTests(unittest.TestCase):
             "## Urgente\n- [ ] A — @D — origem: reunioes/ata.md — crítica\n## Em aberto\n## Concluídas\n"))
         (pasta / "reunioes").mkdir()
         (pasta / "reunioes" / "ata.md").write_text("ata", encoding="utf-8")
+        self.assertEqual(self.erros(), [])
+
+    def test_lista_numerada_e_denunciada(self):
+        criar_frente(self.raiz, "frente-a", pendencias=(
+            "## Urgente\n- [ ] A — @D — crítica\n## Em aberto\n1. [ ] B — @D\n## Concluídas\n"))
+        self.assertTrue(any("lista numerada" in e for e in self.erros()))
+
+    def test_descartada_nao_conta_como_critica(self):
+        criar_frente(self.raiz, "frente-a", pendencias=(
+            "## Urgente\n- [ ] A — @D — crítica\n## Em aberto\n## Concluídas\n## Descartadas\n"
+            "- [-] B — @D — descartada em 2026-10-13 — motivo: m\n"))
         self.assertEqual(self.erros(), [])
 
 

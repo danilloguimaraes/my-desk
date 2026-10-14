@@ -15,14 +15,18 @@ from typing import Callable
 
 RAIZ = Path(__file__).resolve().parent
 SITUACOES = ("ativa", "pausada", "arquivada")
-SECOES = ("Urgente", "Em aberto", "Concluídas")
+SECOES = ("Urgente", "Em aberto", "Concluídas", "Descartadas")
+SECOES_ABERTAS = ("Urgente", "Em aberto")
+MARCA_SITUACAO = {" ": "aberta", "x": "concluída", "-": "descartada"}
+SECAO_FINAL = {"concluída": "Concluídas", "descartada": "Descartadas"}
 ARQUIVOS_FRENTE = ("README.md", "PENDENCIAS.md", "DECISOES.md", "PESSOAS.md")
 PASTAS_ARTEFATO = ("reunioes", "rascunhos", "leituras")
 LEGACY_MD = ("monitoramento.md", "projeto.md", "planejamento.md", "calendario.md", "comunicacoes.md", "plano_acoes.md")
 LARGURA_PAINEL = 40
 SEPARADOR = " — "
 
-PENDENCIA_RE = re.compile(r"^- \[( |x)\] (.+)$")
+PENDENCIA_RE = re.compile(r"^- \[( |x|-)\] (.+)$")
+NUMERADA_RE = re.compile(r"^\s*\d+\. \[[ x-]\]")
 FICHA_LINHA_RE = re.compile(r"^\|\s*([^|]+?)\s*\|\s*(.*?)\s*\|\s*$")
 DATA_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 DATA_BR_RE = re.compile(r"^\d{2}/\d{2}/\d{4}$")
@@ -44,12 +48,18 @@ class Pendencia:
     descricao: str
     secao: str
     linha: int
-    aberta: bool
+    situacao: str = "aberta"
     responsavel: str | None = None
     prazo: str | None = None
     origem: str | None = None
     critica: bool = False
     concluida_em: str | None = None
+    descartada_em: str | None = None
+    motivo: str | None = None
+
+    @property
+    def aberta(self) -> bool:
+        return self.situacao == "aberta"
 
     @property
     def urgente(self) -> bool:
@@ -124,13 +134,33 @@ def ler_ficha(texto: str) -> tuple[dict[str, str] | None, int]:
     return None, 0
 
 
+def _coerencia(p: Pendencia) -> list[str]:
+    erros: list[str] = []
+    if p.concluida_em and p.situacao != "concluída":
+        erros.append(f"pendência {p.situacao} com data de conclusão")
+    if p.descartada_em and p.situacao != "descartada":
+        erros.append(f"pendência {p.situacao} com data de descarte")
+    if p.situacao == "concluída" and not p.concluida_em:
+        erros.append("pendência concluída sem 'concluída em AAAA-MM-DD'")
+    if p.situacao == "descartada":
+        if not p.descartada_em:
+            erros.append("pendência descartada sem 'descartada em AAAA-MM-DD'")
+        if not p.motivo:
+            erros.append("pendência descartada sem 'motivo: ...'")
+    esperada = SECAO_FINAL.get(p.situacao)
+    if esperada is None and p.secao not in SECOES_ABERTAS:
+        erros.append(f"pendência aberta em '{p.secao}'")
+    if esperada and p.secao != esperada:
+        erros.append(f"pendência {p.situacao} fora de '{esperada}' (está em '{p.secao}')")
+    return erros
+
+
 def interpretar_pendencia(linha: str, secao: str, numero: int) -> tuple[Pendencia | None, list[str]]:
     m = PENDENCIA_RE.match(linha)
     if m is None:
-        return None, ["linha malformada: esperado '- [ ] ' ou '- [x] ' no início"]
-    aberta = m.group(1) == " "
+        return None, ["linha malformada: esperado '- [ ] ', '- [x] ' ou '- [-] ' no início"]
     partes = [p.strip() for p in m.group(2).split(SEPARADOR)]
-    p = Pendencia(descricao=partes[0], secao=secao, linha=numero, aberta=aberta)
+    p = Pendencia(descricao=partes[0], secao=secao, linha=numero, situacao=MARCA_SITUACAO[m.group(1)])
     erros: list[str] = []
     if not p.descricao:
         erros.append("descrição vazia")
@@ -151,6 +181,14 @@ def interpretar_pendencia(linha: str, secao: str, numero: int) -> tuple[Pendenci
                 p.concluida_em = _normalizar_data(data_txt)
             else:
                 erros.append(f"data de conclusão inválida: {data_txt}")
+        elif campo.startswith("descartada em "):
+            data_txt = campo[len("descartada em "):]
+            if _eh_data(data_txt):
+                p.descartada_em = _normalizar_data(data_txt)
+            else:
+                erros.append(f"data de descarte inválida: {data_txt}")
+        elif campo.startswith("motivo: "):
+            p.motivo = campo[len("motivo: "):].strip() or None
         elif campo.startswith("origem: "):
             p.origem = campo[len("origem: "):].strip()
         elif campo == "crítica":
@@ -158,25 +196,20 @@ def interpretar_pendencia(linha: str, secao: str, numero: int) -> tuple[Pendenci
         else:
             # Compatibilidade legada: campos textuais livres viram contexto e não bloqueiam a leitura.
             pass
-    if aberta and p.concluida_em:
-        erros.append("pendência aberta com data de conclusão")
-    if not aberta and p.concluida_em is None:
-        erros.append("pendência concluída sem 'concluída em AAAA-MM-DD'")
-    if aberta and secao == "Concluídas":
-        erros.append("pendência aberta em 'Concluídas'")
-    if not aberta and secao != "Concluídas":
-        erros.append(f"pendência concluída fora de 'Concluídas' (está em '{secao}')")
+    erros += _coerencia(p)
     return p, erros
 
 
-def ler_pendencias(arquivo: Path, rel: str) -> tuple[list[Pendencia], list[Erro]]:
+def ler_pendencias_texto(texto: str, rel: str) -> tuple[list[Pendencia], list[Erro]]:
     pendencias: list[Pendencia] = []
     erros: list[Erro] = []
     secao = ""
-    texto = arquivo.read_text(encoding="utf-8")
     for numero, linha in enumerate(texto.splitlines(), start=1):
         if linha.startswith("## "):
             secao = linha[3:].strip()
+            continue
+        if NUMERADA_RE.match(linha):
+            erros.append(Erro(rel, numero, "pendência em lista numerada: use '- [ ] ' (invisível ao painel)"))
             continue
         if not linha.lstrip().startswith("- ["):
             continue
@@ -188,6 +221,10 @@ def ler_pendencias(arquivo: Path, rel: str) -> tuple[list[Pendencia], list[Erro]
         if pend:
             pendencias.append(pend)
     return pendencias, erros
+
+
+def ler_pendencias(arquivo: Path, rel: str) -> tuple[list[Pendencia], list[Erro]]:
+    return ler_pendencias_texto(arquivo.read_text(encoding="utf-8"), rel)
 
 
 def descobrir_pastas(raiz: Path) -> list[Path]:
